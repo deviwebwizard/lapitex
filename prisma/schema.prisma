@@ -10,6 +10,7 @@ model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
+  phone     String?
   password  String
   role      String   @default("CUSTOMER") // CUSTOMER, ADMIN
   createdAt DateTime @default(now())
@@ -42,10 +43,12 @@ model Order {
   id         String      @id @default(cuid())
   userId     String
   user       User        @relation(fields: [userId], references: [id])
-  total      Float
-  status     String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  total         Float
+  status        String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  paymentMethod String      @default("COD")     // COD, RAZORPAY
+  paymentStatus String      @default("PENDING") // PENDING, PAID, FAILED
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   orderItems OrderItem[]
 }
 

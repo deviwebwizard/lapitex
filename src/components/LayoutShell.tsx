@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Navbar } from "./Navbar";
 import { ReactNode } from "react";
+import { Logo } from "./Logo";
 
 export function LayoutShell({
   saleBanner,
@@ -25,9 +26,9 @@ export function LayoutShell({
       <footer className="bg-[#1a0e16] text-[#4a1a2e]/60 py-14 mt-auto border-t border-[#2d1a26]/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-black tracking-tighter mb-4 bg-gradient-to-r from-[#f472a8] to-[#e1467c] bg-clip-text text-transparent">
-              LAPITEX
-            </h3>
+            <div className="mb-4 grayscale brightness-150">
+              <Logo className="text-2xl" />
+            </div>
             <p className="text-sm text-white/30">
               Premium refurbished IT solutions. We believe in quality, sustainability, and exceptional performance.
             </p>

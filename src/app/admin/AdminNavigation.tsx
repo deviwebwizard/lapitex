@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useCartStore } from "@/store/cartStore";
 import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart } from "lucide-react";
 
 export function AdminNavigation({ user }: { user: { name?: string | null; email?: string | null } }) {
@@ -101,7 +102,7 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
           {/* User Info & Back to Site */}
           <div className="pt-6 border-t border-white/10 space-y-4">
             <button 
-              onClick={() => signOut({ callbackUrl: '/' })}
+              onClick={() => { useCartStore.getState().clearCart(); signOut({ callbackUrl: '/' })}}
               className="w-full flex items-center justify-center py-2.5 bg-[#e1467c]/10 hover:bg-[#e1467c]/20 text-[#f472a8] font-bold text-xs rounded-xl transition-all border border-[#e1467c]/20"
             >
               <LogOut className="w-3.5 h-3.5 mr-2" /> Sign Out
@@ -176,7 +177,7 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
         {/* User Info */}
         <div className="p-4 mt-2">
           <button 
-            onClick={() => signOut({ callbackUrl: '/' })}
+            onClick={() => { useCartStore.getState().clearCart(); signOut({ callbackUrl: '/' })}}
             className="w-full flex items-center justify-center py-2 mb-3 bg-[#e1467c]/10 hover:bg-[#e1467c]/20 text-[#f472a8] font-bold text-xs rounded-xl transition-all border border-[#e1467c]/20"
           >
             <LogOut className="w-3.5 h-3.5 mr-2" /> Sign Out

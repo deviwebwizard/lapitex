@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import Razorpay from "razorpay";
+
+const razorpay = new Razorpay({
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
+  key_secret: process.env.RAZORPAY_KEY_SECRET || "",
+});
 
 export async function POST(req: Request) {
   try {
@@ -10,15 +16,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { items, paymentMethod } = await req.json();
+    const { items } = await req.json();
 
     if (!items || !items.length) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    const userId = (session.user as any).id;
-    
-    // Fetch real product prices from DB
     const productIds = items.map((item: any) => item.id);
     const dbProducts = await prisma.product.findMany({
       where: { id: { in: productIds } }
@@ -27,7 +30,6 @@ export async function POST(req: Request) {
     const productMap = new Map(dbProducts.map(p => [p.id, p]));
 
     let calculatedSubTotal = 0;
-    const orderItemsData = [];
 
     for (const item of items) {
       const dbProduct = productMap.get(item.id);
@@ -40,15 +42,8 @@ export async function POST(req: Request) {
       
       const price = dbProduct.price;
       calculatedSubTotal += price * item.quantity;
-      
-      orderItemsData.push({
-        productId: item.id,
-        quantity: item.quantity,
-        price: price
-      });
     }
 
-    // Fetch shipping fee
     const shippingSetting = await prisma.siteSetting.findUnique({
       where: { key: "SHIPPING_FEE" }
     });
@@ -56,35 +51,23 @@ export async function POST(req: Request) {
     
     const calculatedTotal = calculatedSubTotal + shippingFee;
 
-    // Create the order
-    const order = await prisma.order.create({
-      data: {
-        userId,
-        total: calculatedTotal,
-        status: "PENDING",
-        paymentMethod: paymentMethod === 'RAZORPAY' ? 'RAZORPAY' : 'COD',
-        paymentStatus: "PENDING",
-        orderItems: {
-          create: orderItemsData
-        }
-      }
+    // Razorpay requires amount in smallest currency unit (paise for INR)
+    const options = {
+      amount: calculatedTotal * 100,
+      currency: "INR",
+      receipt: `receipt_order_${Date.now()}`
+    };
+
+    const order = await razorpay.orders.create(options);
+
+    return NextResponse.json({ 
+      success: true, 
+      orderId: order.id, 
+      amount: order.amount,
+      currency: order.currency 
     });
-
-    // Reduce stock
-    for (const item of orderItemsData) {
-      await prisma.product.update({
-        where: { id: item.productId },
-        data: {
-          stock: {
-            decrement: item.quantity
-          }
-        }
-      });
-    }
-
-    return NextResponse.json({ success: true, orderId: order.id });
   } catch (error: any) {
-    console.error("Checkout error:", error);
-    return NextResponse.json({ error: "Failed to process checkout" }, { status: 500 });
+    console.error("Razorpay create order error:", error);
+    return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
   }
 }

@@ -3,7 +3,9 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, Crown } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { Crown } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,8 +37,8 @@ export default function LoginPage() {
     <div className="min-h-[80vh] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-3xl flex items-center justify-center shadow-xl" style={{ background: 'linear-gradient(135deg, #e1467c, #f472a8)', boxShadow: '0 12px 40px rgba(225,70,124,0.3)' }}>
-            <Sparkles className="w-7 h-7 text-white" />
+          <div className="w-72 h-28 rounded-3xl flex items-center justify-center shadow-lg overflow-hidden p-2 border border-pink-200/60" style={{ background: 'linear-gradient(135deg, #fff0f5, #fce4ec)', boxShadow: '0 8px 25px rgba(225,70,124,0.15)' }}>
+            <Image src="/lapitex_logo.png" alt="Lapitex Logo" width={300} height={100} className="w-full h-full object-contain scale-[2.2]" />
           </div>
         </div>
         <h2 className="text-center text-3xl font-black text-[#2d1a26] tracking-tight">
@@ -91,6 +93,15 @@ export default function LoginPage() {
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
+
+            <div className="flex items-center justify-between text-xs font-semibold pt-1">
+              <Link href="/register" className="text-[#e1467c] hover:text-[#c23066] transition-colors">
+                Sign Up
+              </Link>
+              <Link href="/forgot-password" className="text-[#4a1a2e]/50 hover:text-[#e1467c] transition-colors">
+                Forgot Password?
+              </Link>
+            </div>
           </form>
           
           <div className="mt-8">

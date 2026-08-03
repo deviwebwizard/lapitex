@@ -135,7 +135,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                   <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto mt-2 md:mt-0">
                     <div className="text-right">
                       <p className="text-[10px] font-bold text-[#4a1a2e]/50 uppercase tracking-widest mb-0.5">Total</p>
-                      <p className="font-black text-[#e1467c]">${order.total.toLocaleString()}</p>
+                      <p className="font-black text-[#e1467c]">₹{order.total.toLocaleString()}</p>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -196,10 +196,10 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                             </div>
                             <div className="flex-1 min-w-0">
                               <h5 className="text-sm font-bold text-[#2d1a26] truncate">{item.product.name}</h5>
-                              <p className="text-xs font-semibold text-[#4a1a2e]/60 mt-1">Qty: {item.quantity} × ${item.price.toLocaleString()}</p>
+                              <p className="text-xs font-semibold text-[#4a1a2e]/60 mt-1">Qty: {item.quantity} × ₹{item.price.toLocaleString()}</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-black text-[#e1467c]">${(item.quantity * item.price).toLocaleString()}</p>
+                              <p className="text-sm font-black text-[#e1467c]">₹{(item.quantity * item.price).toLocaleString()}</p>
                             </div>
                           </div>
                         ))}
@@ -207,7 +207,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                       
                       <div className="mt-6 flex justify-between items-center bg-white/70 p-4 rounded-2xl border border-pink-100/60">
                          <span className="text-sm font-bold text-[#4a1a2e]/70 uppercase tracking-wider">Total Amount</span>
-                         <span className="text-xl font-black text-[#e1467c]">${order.total.toLocaleString()}</span>
+                         <span className="text-xl font-black text-[#e1467c]">₹{order.total.toLocaleString()}</span>
                       </div>
                     </div>
                     

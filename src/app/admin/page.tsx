@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { Users, Package, DollarSign, Activity, Settings, TrendingUp, Eye, ShoppingCart } from "lucide-react";
+import { Users, Package, IndianRupee, Activity, Settings, TrendingUp, Eye, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
@@ -25,7 +25,7 @@ export default async function AdminDashboard() {
   });
 
   const metrics = [
-    { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: DollarSign, gradient: "from-emerald-400 to-emerald-600", bgGlow: "rgba(52,211,153,0.15)" },
+    { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: IndianRupee, gradient: "from-emerald-400 to-emerald-600", bgGlow: "rgba(52,211,153,0.15)" },
     { label: "Total Users", value: userCount, icon: Users, gradient: "from-[#e1467c] to-[#f472a8]", bgGlow: "rgba(225,70,124,0.12)" },
     { label: "Active (24h)", value: activeUserCount, icon: Activity, gradient: "from-violet-400 to-violet-600", bgGlow: "rgba(139,92,246,0.12)" },
     { label: "Products", value: productCount, icon: Package, gradient: "from-amber-400 to-amber-600", bgGlow: "rgba(251,191,36,0.12)" },

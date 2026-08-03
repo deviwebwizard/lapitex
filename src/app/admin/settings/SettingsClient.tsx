@@ -40,6 +40,11 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
   const [uploading, setUploading] = useState(false);
   const [savedBanner, setSavedBanner] = useState(false);
   const [savedCarousel, setSavedCarousel] = useState(false);
+  const [savedShipping, setSavedShipping] = useState(false);
+
+  const [shippingFee, setShippingFee] = useState<number>(
+    initialSettings.SHIPPING_FEE !== undefined ? Number(initialSettings.SHIPPING_FEE) : 0
+  );
 
   const defaultBanner = { isActive: true, text: "Independence Day Sale! Use code IND77 for 10% off." };
   const [banner, setBanner] = useState(initialSettings.SALE_BANNER || defaultBanner);
@@ -110,6 +115,29 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
       }
     } catch {
       alert("Error saving carousel");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveShipping = async () => {
+    setLoading(true);
+    setSavedShipping(false);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "SHIPPING_FEE", value: shippingFee })
+      });
+      if (res.ok) {
+        setSavedShipping(true);
+        router.refresh();
+        setTimeout(() => setSavedShipping(false), 3000);
+      } else {
+        alert("Failed to save shipping fee");
+      }
+    } catch {
+      alert("Error saving shipping fee");
     } finally {
       setLoading(false);
     }
@@ -220,6 +248,37 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
               </p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ──── Shipping Settings ──── */}
+      <div className="clay-card p-6 sm:p-7">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center shadow-lg" style={{ boxShadow: '0 6px 20px rgba(99,102,241,0.25)' }}>
+              <span className="text-white text-lg">🚚</span>
+            </div>
+            <div>
+              <h2 className="text-lg font-black text-[#2d1a26]">Shipping Configuration</h2>
+              <p className="text-[10px] text-[#4a1a2e]/40 font-medium">Set your default shipping and delivery charges</p>
+            </div>
+          </div>
+          <button onClick={handleSaveShipping} disabled={loading} className={`clay-btn flex items-center px-5 py-2.5 text-white font-bold text-sm gap-2 ${savedShipping ? '!bg-emerald-500' : ''}`}>
+            <Save className="w-4 h-4" /> {savedShipping ? "Saved ✓" : "Save Shipping"}
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Flat Shipping Fee (₹)</label>
+            <input 
+              type="number"
+              value={shippingFee} 
+              onChange={e => setShippingFee(Number(e.target.value))} 
+              className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" 
+            />
+            <p className="text-xs text-[#4a1a2e]/60 font-medium">Set to 0 for Free Shipping.</p>
+          </div>
         </div>
       </div>
 

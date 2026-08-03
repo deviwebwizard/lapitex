@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MapPin, Phone, Clock, Navigation } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 export default function StorePage() {
   return (
@@ -46,8 +47,10 @@ export default function StorePage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-1">Address</h3>
+                    <h3 className="text-xl font-bold text-[#2d1a26] mb-2 flex items-center gap-2">
+                      <Logo className="text-xl" /> IT SOLUTION
+                    </h3>
                     <p className="text-gray-600 font-medium leading-relaxed">
-                      LAPITEX IT SOLUTION<br/>
                       Union bank in building, Chandi vayapar bhawan,<br/>
                       W2 2nd floor, Brajkishore Path,<br/>
                       near Pillar no 15,<br/>

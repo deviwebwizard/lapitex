@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
@@ -10,15 +11,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { items, paymentMethod } = await req.json();
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, items } = await req.json();
 
     if (!items || !items.length) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
     const userId = (session.user as any).id;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json({ error: "Invalid payment details" }, { status: 400 });
+    }
+
+    const secret = process.env.RAZORPAY_KEY_SECRET || "";
     
-    // Fetch real product prices from DB
+    const shasum = crypto.createHmac("sha256", secret);
+    shasum.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+    const digest = shasum.digest("hex");
+
+    if (digest !== razorpay_signature) {
+      return NextResponse.json({ error: "Transaction is not legit!" }, { status: 400 });
+    }
+
     const productIds = items.map((item: any) => item.id);
     const dbProducts = await prisma.product.findMany({
       where: { id: { in: productIds } }
@@ -31,12 +45,7 @@ export async function POST(req: Request) {
 
     for (const item of items) {
       const dbProduct = productMap.get(item.id);
-      if (!dbProduct) {
-        return NextResponse.json({ error: `Product not found: ${item.id}` }, { status: 404 });
-      }
-      if (dbProduct.stock < item.quantity) {
-        return NextResponse.json({ error: `Not enough stock for ${dbProduct.name}` }, { status: 400 });
-      }
+      if (!dbProduct) continue;
       
       const price = dbProduct.price;
       calculatedSubTotal += price * item.quantity;
@@ -48,7 +57,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Fetch shipping fee
     const shippingSetting = await prisma.siteSetting.findUnique({
       where: { key: "SHIPPING_FEE" }
     });
@@ -61,9 +69,9 @@ export async function POST(req: Request) {
       data: {
         userId,
         total: calculatedTotal,
-        status: "PENDING",
-        paymentMethod: paymentMethod === 'RAZORPAY' ? 'RAZORPAY' : 'COD',
-        paymentStatus: "PENDING",
+        status: "PENDING", // Order status
+        paymentMethod: "RAZORPAY",
+        paymentStatus: "PAID",
         orderItems: {
           create: orderItemsData
         }
@@ -84,7 +92,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, orderId: order.id });
   } catch (error: any) {
-    console.error("Checkout error:", error);
-    return NextResponse.json({ error: "Failed to process checkout" }, { status: 500 });
+    console.error("Razorpay verify error:", error);
+    return NextResponse.json({ error: "Failed to verify payment" }, { status: 500 });
   }
 }

@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { ShoppingCart, DollarSign, Activity, ArrowLeftRight } from "lucide-react";
+import { ShoppingCart, IndianRupee, Activity, ArrowLeftRight } from "lucide-react";
 import OrdersClient from "./OrdersClient";
 
 export const dynamic = "force-dynamic";
@@ -55,13 +55,13 @@ export default async function AdminOrdersPage() {
         <div className="clay-card p-6 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(135deg, #10b981, #34d399)' }}>
-              <DollarSign className="w-6 h-6 text-white" />
+              <IndianRupee className="w-6 h-6 text-white" />
             </div>
             <span className="text-[10px] font-black text-[#10b981] bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-widest">
               Net
             </span>
           </div>
-          <p className="text-3xl font-black text-[#2d1a26] mb-1">${totalRevenue.toLocaleString()}</p>
+          <p className="text-3xl font-black text-[#2d1a26] mb-1">₹{totalRevenue.toLocaleString()}</p>
           <p className="text-xs font-bold text-[#4a1a2e]/50 uppercase tracking-wider">Total Revenue</p>
         </div>
 

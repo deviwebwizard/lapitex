@@ -6,6 +6,7 @@ import { ShoppingBag, User as UserIcon, Menu, X, ChevronDown, ChevronRight, Moni
 import { useCartStore } from "@/store/cartStore";
 import { useCompareStore } from "@/store/compareStore";
 import { useEffect, useState } from "react";
+import { Logo } from "./Logo";
 
 export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text: string } | null }) {
   const { data: session, status } = useSession();
@@ -25,6 +26,12 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text:
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      useCartStore.getState().clearCart();
+    }
+  }, [status]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,9 +75,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text:
               
               {/* Logo */}
               <Link href="/" className="flex-shrink-0 flex items-center group">
-                <span className="font-black text-2xl md:text-[1.7rem] tracking-tighter bg-gradient-to-r from-[#e1467c] to-[#f472a8] bg-clip-text text-transparent group-hover:from-[#c23066] group-hover:to-[#e1467c] transition-all duration-300">
-                  LAPITEX
-                </span>
+                <Logo className="text-2xl md:text-[1.7rem] group-hover:from-[#c23066] group-hover:to-[#e1467c]" />
               </Link>
 
               {/* Center Links (Desktop) */}
@@ -213,7 +218,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text:
                         <Crown className="absolute -top-1 -right-1 w-3.5 h-3.5 text-amber-500" fill="currentColor" />
                       )}
                     </Link>
-                    <button onClick={() => signOut()} className="text-[10px] font-bold text-[#4a1a2e]/50 hover:text-[#e1467c] uppercase tracking-wider transition-colors px-3 py-2 hover:bg-pink-50/60 rounded-full">
+                    <button onClick={() => { useCartStore.getState().clearCart(); signOut(); }} className="text-[10px] font-bold text-[#4a1a2e]/50 hover:text-[#e1467c] uppercase tracking-wider transition-colors px-3 py-2 hover:bg-pink-50/60 rounded-full">
                       Logout
                     </button>
                   </div>
@@ -326,7 +331,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text:
                   )}
                 </Link>
                 <button 
-                  onClick={() => { signOut(); setMobileMenuOpen(false); }} 
+                  onClick={() => { useCartStore.getState().clearCart(); signOut(); setMobileMenuOpen(false); }} 
                   className="text-[9px] font-black text-[#e1467c] uppercase tracking-widest bg-pink-100/60 hover:bg-pink-200/60 px-4 py-2.5 rounded-full transition-colors"
                 >
                   Logout
