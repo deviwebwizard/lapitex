@@ -1,65 +1,198 @@
-import Image from "next/image";
+import Link from "next/link";
+import prisma from "@/lib/prisma";
+import { ArrowRight, Monitor, Cpu, ShieldCheck, Laptop, HardDrive } from "lucide-react";
+import { HeroCarousel } from "@/components/HeroCarousel";
+import { CompareButton } from "@/components/CompareButton";
 
-export default function Home() {
+export default async function Home() {
+  const featuredProducts = await prisma.product.findMany({
+    where: { isFeatured: true },
+    take: 8, // Increased to 8 to fill out the grid nicely
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Hero Carousel */}
+      <HeroCarousel />
+
+      {/* Independence Day Premium Glassmorphic Banner */}
+      <section className="relative z-20 -mt-12 mx-4 sm:mx-6 lg:mx-8 mb-8 max-w-7xl lg:mx-auto lg:w-[calc(100%-4rem)]">
+        <div className="rounded-3xl overflow-hidden relative shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60">
+          {/* Subtle animated background gradient (Saffron - White - Green) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-200/40 via-white/40 to-green-200/40 opacity-90"></div>
+          
+          {/* Glassmorphism layer */}
+          <div className="relative backdrop-blur-xl bg-white/40 p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between">
+            <div className="flex-1 text-center sm:text-left mb-6 sm:mb-0">
+              <div className="inline-block px-3 py-1 bg-gradient-to-r from-orange-500 to-orange-400 text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-3 shadow-sm">
+                Live Now
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter mb-2">
+                Independence Day Sale
+              </h2>
+              <p className="text-gray-700 font-medium text-lg max-w-xl">
+                Celebrate freedom with up to <span className="font-bold text-primary">50% OFF</span> on premium refurbished laptops and desktops.
+              </p>
+            </div>
+            
+            <div className="flex-shrink-0">
+              <Link href="/shop" className="inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+                Shop the Sale
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Top Categories - Quick Links */}
+      <section className="py-10 bg-white border-b border-border shadow-sm relative z-10 -mt-6 mx-4 sm:mx-6 lg:mx-8 rounded-xl px-4">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-center text-xl font-bold text-gray-800 mb-6 uppercase tracking-widest">Shop by Category</h2>
+          <div className="flex flex-wrap justify-center gap-8">
+            <Link href="/shop?category=Laptops" className="flex flex-col items-center group">
+              <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                <Laptop className="h-8 w-8" />
+              </div>
+              <span className="font-semibold text-gray-700 group-hover:text-primary">Laptops</span>
+            </Link>
+            <Link href="/shop?category=Desktops" className="flex flex-col items-center group">
+              <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                <Monitor className="h-8 w-8" />
+              </div>
+              <span className="font-semibold text-gray-700 group-hover:text-primary">Desktops</span>
+            </Link>
+            <Link href="/shop?category=Parts" className="flex flex-col items-center group">
+              <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                <Cpu className="h-8 w-8" />
+              </div>
+              <span className="font-semibold text-gray-700 group-hover:text-primary">Processors</span>
+            </Link>
+            <Link href="/shop?category=Parts" className="flex flex-col items-center group">
+              <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                <HardDrive className="h-8 w-8" />
+              </div>
+              <span className="font-semibold text-gray-700 group-hover:text-primary">Storage & RAM</span>
+            </Link>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Promotional Banners Row */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link href="/shop?category=Laptops" className="block rounded-2xl overflow-hidden relative group shadow-md">
+            <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800" alt="Refurbished Business Laptops" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-8">
+              <div className="text-white">
+                <h3 className="text-2xl font-bold mb-2">Premium Business Laptops</h3>
+                <p className="text-gray-200 mb-4">Up to 40% Off on Dell, HP & Lenovo</p>
+                <span className="bg-primary px-4 py-2 rounded-md font-bold text-sm">Shop Now</span>
+              </div>
+            </div>
+          </Link>
+          <Link href="/shop?category=Parts" className="block rounded-2xl overflow-hidden relative group shadow-md">
+            <img src="https://images.unsplash.com/photo-1541560052-5e137f229371?auto=format&fit=crop&q=80&w=800" alt="PC Components" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-l from-primary/90 to-black/40 flex items-center justify-end p-8 text-right">
+              <div className="text-white">
+                <h3 className="text-2xl font-bold mb-2">Build Your Dream PC</h3>
+                <p className="text-gray-100 mb-4">Genuine Parts & Accessories</p>
+                <span className="bg-white text-primary px-4 py-2 rounded-md font-bold text-sm">Explore</span>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-12 bg-white border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
+            <div>
+              <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Featured Deals</h2>
+              <p className="text-gray-500 mt-1 font-medium">Grab these amazing offers before they are gone!</p>
+            </div>
+            <Link href="/shop" className="text-primary font-bold hover:underline flex items-center uppercase text-sm">
+              View All <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => {
+              const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+              const discountPercent = hasDiscount 
+                ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+                : 0;
+
+              return (
+                <div key={product.id} className="bg-white rounded-3xl overflow-hidden shadow-[0_2px_10px_rgb(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 group flex flex-col border border-gray-100/50">
+                  <Link href={`/product/${product.id}`} className="flex-grow">
+                    <div className="h-56 overflow-hidden bg-gray-50 relative flex items-center justify-center border-b border-gray-100/50">
+                      <CompareButton product={product} />
+                      {product.imageUrl ? (
+                        <img src={product.imageUrl} alt={product.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 font-medium">No Image</div>
+                      )}
+                      
+                      {/* Discount Badge */}
+                      {hasDiscount && (
+                        <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm z-10 tracking-wide">
+                          {discountPercent}% OFF
+                        </div>
+                      )}
+                      
+                      <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md text-[10px] font-bold px-3 py-1.5 rounded-full text-gray-600 shadow-sm border border-gray-100/50 uppercase tracking-widest">
+                        {product.condition}
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="text-[10px] text-gray-400 font-semibold mb-2 uppercase tracking-widest">{product.category}</div>
+                      <h3 className="font-semibold text-gray-900 line-clamp-2 h-12 mb-3 leading-snug group-hover:text-primary transition-colors">{product.name}</h3>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl font-bold text-gray-900 tracking-tight">₹{product.price.toLocaleString()}</span>
+                        {hasDiscount && (
+                          <span className="text-sm text-gray-400 line-through font-medium">₹{product.originalPrice!.toLocaleString()}</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-gray-50 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform">
+              <div className="h-16 w-16 bg-pink-50 text-primary rounded-full flex items-center justify-center mb-6">
+                <Monitor className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Quality Assured</h3>
+              <p className="text-gray-500">Every device undergoes a rigorous 50-point quality check before sale.</p>
+            </div>
+            <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform">
+              <div className="h-16 w-16 bg-pink-50 text-primary rounded-full flex items-center justify-center mb-6">
+                <Cpu className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Wide Range of Parts</h3>
+              <p className="text-gray-500">From RAM upgrades to SSDs, find all genuine parts in one place.</p>
+            </div>
+            <div className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 transition-transform">
+              <div className="h-16 w-16 bg-pink-50 text-primary rounded-full flex items-center justify-center mb-6">
+                <ShieldCheck className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Trusted Warranty</h3>
+              <p className="text-gray-500">We offer up to 6 months of warranty on our refurbished products.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
