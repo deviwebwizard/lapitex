@@ -5,15 +5,27 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { CompareButton } from "@/components/CompareButton";
 
 export default async function Home() {
-  const featuredProducts = await prisma.product.findMany({
-    where: { isFeatured: true },
-    take: 8, // Increased to 8 to fill out the grid nicely
-  });
+  const [featuredProducts, carouselSetting] = await Promise.all([
+    prisma.product.findMany({
+      where: { isFeatured: true },
+      take: 8,
+    }),
+    prisma.siteSetting.findUnique({
+      where: { key: "HERO_CAROUSEL" }
+    })
+  ]);
+
+  let carouselSlides = undefined;
+  if (carouselSetting) {
+    try {
+      carouselSlides = JSON.parse(carouselSetting.value);
+    } catch (e) {}
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Hero Carousel */}
-      <HeroCarousel />
+      <HeroCarousel slides={carouselSlides} />
 
       {/* Independence Day Premium Glassmorphic Banner */}
       <section className="relative z-20 -mt-12 mx-4 sm:mx-6 lg:mx-8 mb-8 max-w-7xl lg:mx-auto lg:w-[calc(100%-4rem)]">

@@ -13,8 +13,11 @@ model User {
   password  String
   role      String   @default("CUSTOMER") // CUSTOMER, ADMIN
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+  updatedAt  DateTime    @updatedAt
+  orders     Order[]
+  cartItems  CartItem[]
+  views      ProductView[]
+  lastOnline DateTime    @default(now())
 }
 
 model Product {
@@ -31,6 +34,8 @@ model Product {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   orderItems    OrderItem[]
+  cartItems     CartItem[]
+  views         ProductView[]
 }
 
 model Order {
@@ -52,4 +57,35 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
   price     Float
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+}
+
+model ProductView {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  viewedAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String   // JSON string
+  updatedAt DateTime @updatedAt
 }

@@ -1,10 +1,13 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 
+// IMPORTANT: Do NOT use PrismaAdapter with CredentialsProvider.
+// PrismaAdapter expects OAuth/email providers that create database sessions.
+// CredentialsProvider + JWT strategy is self-contained — the JWT IS the session.
+
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // No adapter — JWT handles everything
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -18,22 +21,19 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
-          }
+          where: { email: credentials.email }
         });
 
-        // In a real app, hash and compare passwords using bcrypt
-        // For this demo/initial setup, we are checking plain text or just creating if not exists
         if (!user || user.password !== credentials.password) {
           return null;
         }
 
+        // Return the user object — this becomes the `user` param in the jwt callback
         return {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.role
+          role: user.role,
         };
       }
     })
@@ -41,8 +41,10 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
+      // `user` is only defined on initial sign-in
       if (user) {
         token.role = (user as any).role;
         token.id = user.id;

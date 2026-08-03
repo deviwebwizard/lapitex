@@ -6,6 +6,7 @@ import { AddToCartButton } from "@/components/AddToCartButton";
 import { CompareButton } from "@/components/CompareButton";
 import { ProductTabs } from "@/components/ProductTabs";
 import { parseSpecs } from "@/lib/parseSpecs";
+import ProductTracker from "@/components/ProductTracker";
 
 export default async function ProductPage({
   params,
@@ -25,6 +26,7 @@ export default async function ProductPage({
 
   return (
     <div className="bg-gray-50/50 min-h-screen pb-24 md:pb-12">
+      <ProductTracker productId={product.id} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <Link href="/shop" className="inline-flex items-center text-gray-500 hover:text-primary transition-colors mb-6 md:mb-8 text-sm font-medium">
           <ArrowLeft className="h-4 w-4 mr-2" /> Back to Shop

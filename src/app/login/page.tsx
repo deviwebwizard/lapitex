@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Sparkles, Crown } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,99 +26,92 @@ export default function LoginPage() {
     if (res?.error) {
       setError("Invalid email or password");
       setLoading(false);
-    } else {
-      router.push("/");
-      router.refresh();
+    } else if (res?.ok) {
+      window.location.href = "/auth-redirect";
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
+    <div className="min-h-[80vh] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 rounded-3xl flex items-center justify-center shadow-xl" style={{ background: 'linear-gradient(135deg, #e1467c, #f472a8)', boxShadow: '0 12px 40px rgba(225,70,124,0.3)' }}>
+            <Sparkles className="w-7 h-7 text-white" />
+          </div>
+        </div>
+        <h2 className="text-center text-3xl font-black text-[#2d1a26] tracking-tight">
+          Welcome back
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Or{" "}
-          <span className="font-medium text-primary cursor-pointer hover:underline">
-            create a new account
-          </span>
+        <p className="mt-2 text-center text-sm text-[#4a1a2e]/50 font-medium">
+          Sign in to your Lapitex account
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-sm border border-border sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+        <div className="bg-white shadow-2xl shadow-pink-900/10 rounded-[2rem] border border-pink-100 p-8 sm:p-10">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
+              <div className="bg-red-50 text-red-600 p-3.5 rounded-2xl text-sm font-semibold border border-red-100/50 text-center">
                 {error}
               </div>
             )}
             
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">
                 Email address
               </label>
-              <div className="mt-1">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                />
-              </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] placeholder-[#4a1a2e]/20"
+                placeholder="you@example.com"
+              />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">
                 Password
               </label>
-              <div className="mt-1">
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                />
-              </div>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] placeholder-[#4a1a2e]/20"
+                placeholder="••••••••"
+              />
             </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                  loading ? 'bg-primary/70' : 'bg-primary hover:bg-primary/90'
-                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary`}
-              >
-                {loading ? 'Signing in...' : 'Sign in'}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`clay-btn w-full flex justify-center py-3.5 text-sm font-bold text-white ${loading ? 'opacity-70' : ''}`}
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
           </form>
           
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+          <div className="mt-8">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-pink-50/80 to-white/50 border border-pink-100/30 text-center">
+                <div className="flex items-center justify-center gap-1 mb-1.5">
+                  <Crown className="w-3 h-3 text-amber-500" />
+                  <span className="text-[9px] font-black text-[#e1467c] uppercase tracking-widest">Admin</span>
+                </div>
+                <p className="text-[10px] text-[#2d1a26] font-semibold">admin@lapitex.com</p>
+                <p className="text-[10px] text-[#4a1a2e]/30">password123</p>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Demo Accounts
-                </span>
-              </div>
-            </div>
-            <div className="mt-6 grid grid-cols-2 gap-3 text-xs">
-              <div className="bg-gray-50 p-2 rounded text-center">
-                <strong>Admin:</strong> admin@lapitex.com <br/> pass: password123
-              </div>
-              <div className="bg-gray-50 p-2 rounded text-center">
-                <strong>Customer:</strong> customer@test.com <br/> pass: password123
+              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-pink-50/80 to-white/50 border border-pink-100/30 text-center">
+                <div className="flex items-center justify-center gap-1 mb-1.5">
+                  <span className="text-[9px] font-black text-[#4a1a2e]/40 uppercase tracking-widest">Customer</span>
+                </div>
+                <p className="text-[10px] text-[#2d1a26] font-semibold">customer@test.com</p>
+                <p className="text-[10px] text-[#4a1a2e]/30">password123</p>
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
