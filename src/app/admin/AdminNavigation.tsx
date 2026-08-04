@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useCartStore } from "@/store/cartStore";
-import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart } from "lucide-react";
+import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart, ListTree } from "lucide-react";
 
 export function AdminNavigation({ user }: { user: { name?: string | null; email?: string | null } }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -15,6 +15,7 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { label: "Users", href: "/admin/users", icon: Users },
     { label: "Products", href: "/admin/products", icon: Package },
+    { label: "Categories", href: "/admin/categories", icon: ListTree },
     { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
     { label: "Site Settings", href: "/admin/settings", icon: Settings },
   ];

@@ -31,6 +31,7 @@ model Product {
   category      String
   condition     String      @default("Refurbished") // Refurbished, Used, New
   imageUrl      String?
+  discountBadge String?
   isFeatured    Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -91,4 +92,25 @@ model SiteSetting {
   key       String   @id
   value     String   // JSON string
   updatedAt DateTime @updatedAt
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  parentId  String?
+  parent    Category?  @relation("CategoryToCategory", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Category[] @relation("CategoryToCategory")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

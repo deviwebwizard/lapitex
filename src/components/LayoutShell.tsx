@@ -55,7 +55,7 @@ export function LayoutShell({
               </li>
               <li>
                 <a href="/shop?category=Laptops" className="text-white/30 hover:text-[#f472a8] transition-colors">
-                  MacBooks & Laptops
+                  Old Laptops
                 </a>
               </li>
             </ul>

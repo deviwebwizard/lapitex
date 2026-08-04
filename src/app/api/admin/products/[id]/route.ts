@@ -23,6 +23,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         condition: body.condition,
         stock: parseInt(body.stock),
         imageUrl: body.imageUrl,
+        discountBadge: body.discountBadge || null,
         isFeatured: body.isFeatured
       }
     });

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, description, price, originalPrice, stock, category, condition, imageUrl, isFeatured } = body;
+    const { name, description, price, originalPrice, stock, category, condition, imageUrl, isFeatured, discountBadge } = body;
 
     if (!name || !description || price === undefined || !category) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
         category,
         condition: condition || "Refurbished",
         imageUrl,
+        discountBadge: discountBadge || null,
         isFeatured: Boolean(isFeatured),
       },
     });

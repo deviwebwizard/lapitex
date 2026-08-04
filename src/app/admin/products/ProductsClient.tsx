@@ -13,6 +13,7 @@ type Product = {
   category: string;
   condition: string;
   imageUrl: string | null;
+  discountBadge: string | null;
   isFeatured: boolean;
   description: string;
   _count: { orderItems: number; views: number; cartItems: number };
@@ -55,7 +56,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
 
   const [formData, setFormData] = useState({
     name: "", description: "", price: "", originalPrice: "", stock: "0",
-    category: "", condition: "Refurbished", imageUrl: "", isFeatured: false,
+    category: "", condition: "Refurbished", imageUrl: "", discountBadge: "", isFeatured: false,
   });
 
   const filteredProducts = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
@@ -67,11 +68,11 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
         name: product.name, description: product.description,
         price: product.price.toString(), originalPrice: product.originalPrice ? product.originalPrice.toString() : "",
         stock: product.stock.toString(), category: product.category,
-        condition: product.condition, imageUrl: product.imageUrl || "", isFeatured: product.isFeatured,
+        condition: product.condition, imageUrl: product.imageUrl || "", discountBadge: product.discountBadge || "", isFeatured: product.isFeatured,
       });
     } else {
       setEditingProduct(null);
-      setFormData({ name: "", description: "", price: "", originalPrice: "", stock: "0", category: "", condition: "Refurbished", imageUrl: "", isFeatured: false });
+      setFormData({ name: "", description: "", price: "", originalPrice: "", stock: "0", category: "", condition: "Refurbished", imageUrl: "", discountBadge: "", isFeatured: false });
     }
     setIsModalOpen(true);
   };
@@ -249,28 +250,32 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                 <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} rows={3} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] resize-none" />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Price (₹)</label>
-                  <input required type="number" step="0.01" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
+                  <input required type="number" min="0" step="0.01" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Original (₹)</label>
-                  <input type="number" step="0.01" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} placeholder="Optional" className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] placeholder-[#4a1a2e]/20" />
+                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Original Price (₹)</label>
+                  <input type="number" min="0" step="0.01" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Stock</label>
-                  <input required type="number" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
+                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Custom Badge (e.g. 50% OFF)</label>
+                  <input type="text" placeholder="Optional" value={formData.discountBadge} onChange={e => setFormData({...formData, discountBadge: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Stock</label>
+                  <input required type="number" min="0" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
+                </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Condition</label>
-                  <select value={formData.condition} onChange={e => setFormData({...formData, condition: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]">
-                    <option value="New">New</option>
+                  <select value={formData.condition} onChange={e => setFormData({...formData, condition: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] appearance-none">
                     <option value="Refurbished">Refurbished</option>
                     <option value="Used">Used</option>
+                    <option value="New">New</option>
                   </select>
                 </div>
                 <div className="space-y-1.5 flex flex-col justify-end">

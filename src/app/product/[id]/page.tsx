@@ -88,6 +88,11 @@ export default async function ProductPage({
                     ₹{product.originalPrice.toLocaleString()}
                   </span>
                 )}
+                {(product.discountBadge || (product.originalPrice && product.originalPrice > product.price)) && (
+                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold tracking-wide mb-1">
+                    {product.discountBadge ? product.discountBadge : `${Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)}% OFF`}
+                  </span>
+                )}
               </div>
               
               <div className="prose prose-sm text-gray-600 mb-8 line-clamp-4">

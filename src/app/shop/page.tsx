@@ -96,9 +96,9 @@ export default async function ShopPage({
                       )}
                       
                       {/* Discount Badge */}
-                      {hasDiscount && (
+                      {(product.discountBadge || hasDiscount) && (
                         <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm z-10 tracking-wide">
-                          {discountPercent}% OFF
+                          {product.discountBadge ? product.discountBadge : `${discountPercent}% OFF`}
                         </div>
                       )}
                       
