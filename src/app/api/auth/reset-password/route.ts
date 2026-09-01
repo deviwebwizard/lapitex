@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { hashPassword } from "@/lib/password";
 
 export async function POST(req: Request) {
   try {
@@ -34,12 +35,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Reset token has expired" }, { status: 400 });
     }
 
-    // Since the system currently uses plaintext passwords (per auth.ts), we update it directly.
-    // NOTE: In production, passwords should ALWAYS be hashed using bcrypt or similar.
+    const hashedPassword = await hashPassword(password);
+
     await prisma.user.update({
       where: { email: resetToken.email },
       data: {
-        password: password,
+        password: hashedPassword,
       },
     });
 

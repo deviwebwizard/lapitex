@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Crown } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -104,25 +103,6 @@ export default function LoginPage() {
             </div>
           </form>
           
-          <div className="mt-8">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-pink-50/80 to-white/50 border border-pink-100/30 text-center">
-                <div className="flex items-center justify-center gap-1 mb-1.5">
-                  <Crown className="w-3 h-3 text-amber-500" />
-                  <span className="text-[9px] font-black text-[#e1467c] uppercase tracking-widest">Admin</span>
-                </div>
-                <p className="text-[10px] text-[#2d1a26] font-semibold">admin@lapitex.com</p>
-                <p className="text-[10px] text-[#4a1a2e]/30">password123</p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-pink-50/80 to-white/50 border border-pink-100/30 text-center">
-                <div className="flex items-center justify-center gap-1 mb-1.5">
-                  <span className="text-[9px] font-black text-[#4a1a2e]/40 uppercase tracking-widest">Customer</span>
-                </div>
-                <p className="text-[10px] text-[#2d1a26] font-semibold">customer@test.com</p>
-                <p className="text-[10px] text-[#4a1a2e]/30">password123</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

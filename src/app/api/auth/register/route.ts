@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { hashPassword } from "@/lib/password";
 
 export async function POST(req: Request) {
   try {
@@ -24,14 +25,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create the new user
-    // Note: We are storing plain text passwords to match the existing login logic
+    const hashedPassword = await hashPassword(password);
+
     const newUser = await prisma.user.create({
       data: {
         name,
         email,
         phone: phone || null,
-        password,
+        password: hashedPassword,
         role: "CUSTOMER", // Default role
       },
     });

@@ -29,7 +29,10 @@ export async function POST(req: Request) {
     shasum.update(`${razorpay_order_id}|${razorpay_payment_id}`);
     const digest = shasum.digest("hex");
 
-    if (digest !== razorpay_signature) {
+    const expectedSignature = Buffer.from(digest, "hex");
+    const receivedSignature = Buffer.from(razorpay_signature, "hex");
+    if (expectedSignature.length !== receivedSignature.length ||
+        !crypto.timingSafeEqual(expectedSignature, receivedSignature)) {
       return NextResponse.json({ error: "Transaction is not legit!" }, { status: 400 });
     }
 

@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
+import { verifyPassword } from "@/lib/password";
 
 // IMPORTANT: Do NOT use PrismaAdapter with CredentialsProvider.
 // PrismaAdapter expects OAuth/email providers that create database sessions.
@@ -24,7 +25,7 @@ export const authOptions: NextAuthOptions = {
           where: { email: credentials.email }
         });
 
-        if (!user || user.password !== credentials.password) {
+        if (!user || !(await verifyPassword(credentials.password, user.password))) {
           return null;
         }
 
@@ -48,15 +49,15 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       // `user` is only defined on initial sign-in
       if (user) {
-        token.role = (user as any).role;
+        token.role = user.role;
         token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).role = token.role;
-        (session.user as any).id = token.id;
+        session.user.role = token.role ?? "CUSTOMER";
+        session.user.id = token.id ?? "";
       }
       return session;
     }

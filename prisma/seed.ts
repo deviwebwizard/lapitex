@@ -1,12 +1,25 @@
 const { PrismaClient } = require('@prisma/client')
 const { PrismaLibSql } = require('@prisma/adapter-libsql')
+const { randomBytes, scryptSync } = require('crypto')
 
 const adapter = new PrismaLibSql({
   url: 'file:./dev.db',
 })
 const prisma = new PrismaClient({ adapter })
 
+function hashPassword(password) {
+  const salt = randomBytes(16)
+  const derivedKey = scryptSync(password, salt, 64, { N: 16384, r: 8, p: 1, maxmem: 32 * 1024 * 1024 })
+  return `scrypt$${salt.toString('base64url')}$${derivedKey.toString('base64url')}`
+}
+
 async function main() {
+  const adminPassword = process.env.ADMIN_INITIAL_PASSWORD
+  const customerPassword = process.env.CUSTOMER_INITIAL_PASSWORD
+  if (!adminPassword || !customerPassword) {
+    throw new Error('ADMIN_INITIAL_PASSWORD and CUSTOMER_INITIAL_PASSWORD must be set before seeding')
+  }
+
   // Clear existing products
   await prisma.product.deleteMany({});
   
@@ -17,7 +30,7 @@ async function main() {
       data: {
         name: 'Admin User',
         email: 'admin@lapitex.com',
-        password: 'password123', // In real app, this should be hashed
+        password: hashPassword(adminPassword),
         role: 'ADMIN'
       }
     })
@@ -29,7 +42,7 @@ async function main() {
       data: {
         name: 'Test Customer',
         email: 'customer@test.com',
-        password: 'password123',
+        password: hashPassword(customerPassword),
         role: 'CUSTOMER'
       }
     })

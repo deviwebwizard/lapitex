@@ -104,6 +104,16 @@ model PasswordResetToken {
   @@unique([email, token])
 }
 
+model AuthRateLimit {
+  key                   String   @id
+  count                 Int      @default(0)
+  windowStartedAt       DateTime @default(now())
+  totalCount            Int      @default(0)
+  totalWindowStartedAt  DateTime @default(now())
+  blockedUntil          DateTime?
+  updatedAt             DateTime @updatedAt
+}
+
 model Category {
   id        String     @id @default(cuid())
   name      String
