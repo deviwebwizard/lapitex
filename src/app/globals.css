@@ -22,6 +22,11 @@
   --border: #f3d4de;
   --ring: #e1467c;
 
+  --font-inter: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-cinzel: Georgia, "Times New Roman", serif;
+  --font-orbitron: "Arial Black", Impact, sans-serif;
+  --font-aesthetic: "Brush Script MT", "Segoe Script", cursive;
+
   /* Gradient tokens */
   --gradient-primary: linear-gradient(135deg, #f472a8 0%, #e1467c 50%, #c23066 100%);
   --gradient-soft: linear-gradient(135deg, #fce4ec 0%, #fdf2f6 50%, #fff 100%);
@@ -32,8 +37,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   
   --color-primary: var(--primary);
   --color-primary-light: var(--primary-light);
