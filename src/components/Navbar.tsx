@@ -8,7 +8,7 @@ import { useCompareStore } from "@/store/compareStore";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
-export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text: string } | null }) {
+export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isStickyActive?: boolean; text: string } | null }) {
   const { data: session, status } = useSession();
   const totalItems = useCartStore((state) => state.totalItems());
   const compareItems = useCompareStore((state) => state.items.length);
@@ -57,7 +57,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text:
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const hasBanner = saleBanner?.isActive;
+  const hasBanner = saleBanner?.isStickyActive ?? saleBanner?.isActive;
 
   return (
     <>
@@ -68,7 +68,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; text:
             <div className="absolute inset-0 opacity-20" style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
             <p className="text-white text-xs font-bold tracking-widest uppercase relative z-10 flex items-center justify-center gap-2">
               <Sparkles className="w-3.5 h-3.5" />
-              {saleBanner.text}
+              {saleBanner?.text}
               <Sparkles className="w-3.5 h-3.5" />
             </p>
           </div>

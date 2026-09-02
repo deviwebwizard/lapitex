@@ -46,8 +46,8 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
     initialSettings.SHIPPING_FEE !== undefined ? Number(initialSettings.SHIPPING_FEE) : 0
   );
 
-  const defaultBanner = { isActive: true, text: "Independence Day Sale! Use code IND77 for 10% off." };
-  const [banner, setBanner] = useState(initialSettings.SALE_BANNER || defaultBanner);
+  const defaultBanner = { isActive: true, isStickyActive: true, text: "Independence Day Sale! Use code IND77 for 10% off." };
+  const [banner, setBanner] = useState({ ...defaultBanner, ...(initialSettings.SALE_BANNER || {}) });
 
   const defaultCarousel = [
     {
@@ -217,7 +217,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
         </div>
         
         <div className="space-y-4">
-          {/* Toggle */}
+          {/* Main hero banner toggle */}
           <button 
             onClick={() => setBanner({ ...banner, isActive: !banner.isActive })}
             className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl border transition-all w-full text-left font-bold text-sm ${
@@ -227,7 +227,20 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
             }`}
           >
             {banner.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-            <span>{banner.isActive ? "Banner is ACTIVE on website" : "Banner is HIDDEN"}</span>
+            <span>{banner.isActive ? "Main banner is ACTIVE on website" : "Main banner is HIDDEN"}</span>
+          </button>
+
+          {/* Sticky top banner toggle */}
+          <button 
+            onClick={() => setBanner({ ...banner, isStickyActive: !banner.isStickyActive })}
+            className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl border transition-all w-full text-left font-bold text-sm ${
+              banner.isStickyActive
+                ? 'bg-gradient-to-r from-pink-50/80 to-white/50 border-[#e1467c]/20 text-[#e1467c]' 
+                : 'bg-pink-50/30 border-pink-100/30 text-[#4a1a2e]/40'
+            }`}
+          >
+            {banner.isStickyActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+            <span>{banner.isStickyActive ? "Sticky banner is ACTIVE on website" : "Sticky banner is HIDDEN"}</span>
           </button>
 
           <div className="space-y-1.5">
@@ -240,7 +253,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
           </div>
 
           {/* Live Preview */}
-          {banner.isActive && (
+          {banner.isStickyActive && (
             <div className="mt-2 rounded-2xl overflow-hidden shadow-sm" style={{ background: 'linear-gradient(135deg, #e1467c, #f472a8, #e1467c)' }}>
               <div className="p-1 text-[#2d1a26] text-[10px] font-black uppercase text-center bg-white/20 tracking-wider">Live Preview</div>
               <p className="text-white text-xs font-bold tracking-widest uppercase py-2.5 text-center flex items-center justify-center gap-2">

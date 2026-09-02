@@ -10,7 +10,7 @@ export function LayoutShell({
   saleBanner,
   children,
 }: {
-  saleBanner: { isActive: boolean; text: string } | null;
+  saleBanner: { isActive: boolean; isStickyActive?: boolean; text: string } | null;
   children: ReactNode;
 }) {
   const pathname = usePathname();
