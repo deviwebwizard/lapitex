@@ -1,14 +1,11 @@
 // @ts-nocheck - forcing TS re-evaluation
 import { PrismaClient } from '@prisma/client'
-import { PrismaLibSql } from '@prisma/adapter-libsql'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 const prismaClientSingleton = () => {
-  const url = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || 'file:./dev.db'
-  const authToken = process.env.TURSO_AUTH_TOKEN
-  const adapter = new PrismaLibSql({
-    url,
-    ...(authToken ? { authToken } : {}),
-  })
+  const url = process.env.DATABASE_URL
+  if (!url) throw new Error('DATABASE_URL is not configured')
+  const adapter = new PrismaPg({ connectionString: url })
   return new PrismaClient({ adapter })
 }
 

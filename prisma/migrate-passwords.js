@@ -1,8 +1,8 @@
 const { randomBytes, scryptSync } = require('crypto')
 const { PrismaClient } = require('@prisma/client')
-const { PrismaLibSql } = require('@prisma/adapter-libsql')
+const { PrismaPg } = require('@prisma/adapter-pg')
 
-const adapter = new PrismaLibSql({ url: process.env.DATABASE_URL || 'file:./dev.db' })
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
 function hashPassword(password) {

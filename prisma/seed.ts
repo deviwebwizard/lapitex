@@ -1,9 +1,9 @@
 const { PrismaClient } = require('@prisma/client')
-const { PrismaLibSql } = require('@prisma/adapter-libsql')
+const { PrismaPg } = require('@prisma/adapter-pg')
 const { randomBytes, scryptSync } = require('crypto')
 
-const adapter = new PrismaLibSql({
-  url: 'file:./dev.db',
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
 })
 const prisma = new PrismaClient({ adapter })
 
