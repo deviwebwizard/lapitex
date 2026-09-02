@@ -3,6 +3,15 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { User, Package } from "lucide-react";
 import prisma from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
+
+type AccountOrder = Prisma.OrderGetPayload<{
+  include: {
+    orderItems: {
+      include: { product: true };
+    };
+  };
+}>;
 
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
@@ -18,7 +27,7 @@ export default async function AccountPage() {
 
   const userId = (session.user as any).id;
 
-  const orders = await prisma.order.findMany({
+  const orders: AccountOrder[] = await prisma.order.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
     include: {
