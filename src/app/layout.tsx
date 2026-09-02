@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description: "Buy High-Quality Refurbished Laptops & PC Parts",
 };
 
+// The layout reads site settings from the database; never execute that query during build.
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
