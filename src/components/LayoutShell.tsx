@@ -5,6 +5,7 @@ import { Navbar } from "./Navbar";
 import { ReactNode } from "react";
 import { Logo } from "./Logo";
 import Image from "next/image";
+import { Phone, MessageCircle } from "lucide-react";
 
 export function LayoutShell({
   saleBanner,
@@ -66,6 +67,14 @@ export function LayoutShell({
               Connect With Us
             </h3>
             <p className="text-sm text-white/40 mb-3">Lapitex IT Solutions</p>
+            <div className="space-y-1.5 mb-4 text-sm">
+              <a href="tel:+916200144824" className="flex items-center gap-2 text-white/50 hover:text-[#f472a8] transition-colors">
+                <Phone className="w-4 h-4" /> +91 6200144824
+              </a>
+              <a href="https://wa.me/918809975386" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors">
+                <MessageCircle className="w-4 h-4" /> WhatsApp: +91 8809975386
+              </a>
+            </div>
             <div className="flex items-center gap-3">
               <a
                 href="https://www.instagram.com/lapitex_it_solutions/"
@@ -137,6 +146,17 @@ export function LayoutShell({
           <p>&copy; {new Date().getFullYear()} Lapitex IT Solutions. All rights reserved.</p>
         </div>
       </footer>
+      <a
+        href="https://wa.me/918809975386"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with Lapitex on WhatsApp"
+        className="fixed bottom-6 right-6 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_25px_rgba(37,211,102,0.4)] transition-all hover:scale-110 hover:bg-[#20bd5a]"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 fill-current">
+          <path d="M20.5 3.5A11.8 11.8 0 0 0 12.1 0C5.6 0 .3 5.3.3 11.8c0 2.1.6 4.1 1.6 5.8L.2 24l6.6-1.7a11.8 11.8 0 0 0 5.3 1.3h.1c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.3-6.1-3.5-8.3ZM12.2 21.5h-.1c-1.7 0-3.4-.5-4.8-1.4l-.3-.2-3.9 1 1-3.8-.2-.3a9.7 9.7 0 0 1-1.5-5.1C2.4 6.4 6.8 2 12.1 2c2.6 0 5 1 6.8 2.8a9.6 9.6 0 0 1 2.8 6.9c0 5.4-4.3 9.8-9.5 9.8Zm5.4-7.3c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2c-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.6-1.8-1.8-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.1 3.3 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z" />
+        </svg>
+      </a>
     </>
   );
 }
