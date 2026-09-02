@@ -4,8 +4,28 @@ import OrdersClient from "./OrdersClient";
 
 export const dynamic = "force-dynamic";
 
+type AdminOrder = {
+  id: string;
+  total: number;
+  status: string;
+  createdAt: Date;
+  user: {
+    name: string;
+    email: string;
+  };
+  orderItems: Array<{
+    id: string;
+    quantity: number;
+    price: number;
+    product: {
+      name: string;
+      imageUrl: string | null;
+    };
+  }>;
+};
+
 export default async function AdminOrdersPage() {
-  const orders = await prisma.order.findMany({
+  const orders: AdminOrder[] = await prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
       user: { select: { name: true, email: true } },
