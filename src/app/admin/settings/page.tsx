@@ -6,14 +6,15 @@ export const dynamic = "force-dynamic";
 export default async function AdminSettingsPage() {
   const settings = await prisma.siteSetting.findMany();
   
-  const settingsObj = settings.reduce<Record<string, unknown>>((acc, setting: { key: string; value: string }) => {
+  const typedSettings = settings as Array<{ key: string; value: string }>;
+  const settingsObj: Record<string, unknown> = {};
+  for (const setting of typedSettings) {
     try {
-      acc[setting.key] = JSON.parse(setting.value);
+      settingsObj[setting.key] = JSON.parse(setting.value);
     } catch {
-      acc[setting.key] = setting.value;
+      settingsObj[setting.key] = setting.value;
     }
-    return acc;
-  }, {});
+  }
 
   return <SettingsClient initialSettings={settingsObj} />;
 }
