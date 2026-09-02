@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Product } from '@prisma/client';
+import type { Product } from '@/types/product';
 
 interface CompareState {
   items: Product[];

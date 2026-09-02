@@ -6,7 +6,7 @@ import { ShopFilters } from "@/components/ShopFilters";
 import { ShopSearch } from "@/components/ShopSearch";
 import { ShopSort } from "@/components/ShopSort";
 import { CompareButton } from "@/components/CompareButton";
-import type { Product } from "@prisma/client";
+import type { Product } from "@/types/product";
 
 export default async function ShopPage({
   searchParams,

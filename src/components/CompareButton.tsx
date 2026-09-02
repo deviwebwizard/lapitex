@@ -1,8 +1,8 @@
 "use client";
 
 import { useCompareStore } from "@/store/compareStore";
+import type { Product } from "@/types/product";
 import { Scale } from "lucide-react";
-import { Product } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 export function CompareButton({ product }: { product: Product }) {

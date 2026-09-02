@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { ArrowRight, Monitor, Cpu, ShieldCheck, Laptop, HardDrive } from "lucide-react";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { CompareButton } from "@/components/CompareButton";
-import type { Product } from "@prisma/client";
+import type { Product } from "@/types/product";
 
 export default async function Home() {
   const [featuredProducts, carouselSetting] = await Promise.all([
