@@ -6,6 +6,7 @@ import { ShopFilters } from "@/components/ShopFilters";
 import { ShopSearch } from "@/components/ShopSearch";
 import { ShopSort } from "@/components/ShopSort";
 import { CompareButton } from "@/components/CompareButton";
+import type { Product } from "@prisma/client";
 
 export default async function ShopPage({
   searchParams,
@@ -78,7 +79,7 @@ export default async function ShopPage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.length > 0 ? products.map((product) => {
+            {products.length > 0 ? products.map((product: Product) => {
               const hasDiscount = product.originalPrice && product.originalPrice > product.price;
               const discountPercent = hasDiscount 
                 ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)

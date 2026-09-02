@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { ArrowRight, Monitor, Cpu, ShieldCheck, Laptop, HardDrive } from "lucide-react";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { CompareButton } from "@/components/CompareButton";
+import type { Product } from "@prisma/client";
 
 export default async function Home() {
   const [featuredProducts, carouselSetting] = await Promise.all([
@@ -130,7 +131,7 @@ export default async function Home() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => {
+            {featuredProducts.map((product: Product) => {
               const hasDiscount = product.originalPrice && product.originalPrice > product.price;
               const discountPercent = hasDiscount 
                 ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
