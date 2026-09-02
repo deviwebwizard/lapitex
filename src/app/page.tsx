@@ -5,14 +5,19 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { CompareButton } from "@/components/CompareButton";
 import type { Product } from "@/types/product";
 
+type SaleBanner = { isActive: boolean; text: string };
+
 export default async function Home() {
-  const [featuredProducts, carouselSetting] = await Promise.all([
+  const [featuredProducts, carouselSetting, saleBannerSetting] = await Promise.all([
     prisma.product.findMany({
       where: { isFeatured: true },
       take: 8,
     }),
     prisma.siteSetting.findUnique({
       where: { key: "HERO_CAROUSEL" }
+    }),
+    prisma.siteSetting.findUnique({
+      where: { key: "SALE_BANNER" }
     })
   ]);
 
@@ -23,12 +28,23 @@ export default async function Home() {
     } catch (e) {}
   }
 
+  let saleBanner: SaleBanner | null = null;
+  if (saleBannerSetting) {
+    try {
+      const parsed = JSON.parse(saleBannerSetting.value) as Partial<SaleBanner>;
+      if (typeof parsed.isActive === "boolean" && typeof parsed.text === "string") {
+        saleBanner = parsed as SaleBanner;
+      }
+    } catch (e) {}
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Hero Carousel */}
       <HeroCarousel slides={carouselSlides} />
 
-      {/* Independence Day Premium Glassmorphic Banner */}
+      {/* Admin-controlled sale banner */}
+      {saleBanner?.isActive && (
       <section className="relative z-20 -mt-12 mx-4 sm:mx-6 lg:mx-8 mb-8 max-w-7xl lg:mx-auto lg:w-[calc(100%-4rem)]">
         <div className="rounded-3xl overflow-hidden relative shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60">
           {/* Subtle animated background gradient (Saffron - White - Green) */}
@@ -41,11 +57,8 @@ export default async function Home() {
                 Live Now
               </div>
               <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter mb-2">
-                Independence Day Sale
+                {saleBanner.text}
               </h2>
-              <p className="text-gray-700 font-medium text-lg max-w-xl">
-                Celebrate freedom with up to <span className="font-bold text-primary">50% OFF</span> on premium refurbished laptops and desktops.
-              </p>
             </div>
             
             <div className="flex-shrink-0">
@@ -57,6 +70,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Top Categories - Quick Links */}
       <section className="py-10 bg-white border-b border-border shadow-sm relative z-10 -mt-6 mx-4 sm:mx-6 lg:mx-8 rounded-xl px-4">
