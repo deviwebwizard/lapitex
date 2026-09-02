@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "./Navbar";
 import { ReactNode } from "react";
 import { Logo } from "./Logo";
+import Image from "next/image";
 
 export function LayoutShell({
   saleBanner,
@@ -24,9 +25,9 @@ export function LayoutShell({
       <Navbar saleBanner={saleBanner} />
       <main className="flex-grow pt-20 md:pt-24">{children}</main>
       <footer className="bg-[#1a0e16] text-[#4a1a2e]/60 py-14 mt-auto border-t border-[#2d1a26]/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="mb-4 grayscale brightness-150">
+            <div className="mb-4">
               <Logo className="text-2xl" />
             </div>
             <p className="text-sm text-white/30">
@@ -81,6 +82,25 @@ export function LayoutShell({
                 </a>
               </li>
             </ul>
+          </div>
+          <div>
+            <h3 className="text-[10px] font-black mb-4 uppercase tracking-[0.2em] text-white/40">
+              IWebWizard
+            </h3>
+            <p className="text-sm text-white/40 mb-3">Created by IWebWizard</p>
+            <a
+              href="mailto:info.iwebwizard@gmail.com"
+              aria-label="Contact IWebWizard"
+              className="inline-block rounded-xl transition-transform hover:scale-105"
+            >
+              <Image
+                src="/iwebwizard_logo.png"
+                alt="IWebWizard"
+                width={180}
+                height={180}
+                className="h-24 w-24 object-contain"
+              />
+            </a>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-white/5 text-sm text-center text-white/20">
