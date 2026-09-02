@@ -7,7 +7,7 @@ export function Logo({ className = "" }: { className?: string }) {
       alt="Lapitex IT Solutions"
       width={700}
       height={385}
-      className={`h-10 w-auto object-contain transition-all duration-300 ${className}`}
+      className={`h-14 md:h-16 w-auto object-contain transition-all duration-300 ${className}`}
     />
   );
 }
