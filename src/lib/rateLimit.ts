@@ -18,7 +18,7 @@ export async function isPasswordResetRateLimited(request: Request, email: string
 
   const now = Date.now();
   for (const key of keys) {
-    const limited = await prisma.$transaction(async (tx) => {
+    const limited = await prisma.$transaction(async (tx: Pick<typeof prisma, "authRateLimit">) => {
       const current = await tx.authRateLimit.findUnique({ where: { key } });
       const windowExpired = !current || now - current.windowStartedAt.getTime() >= WINDOW_MS;
       const totalWindowExpired = !current || now - current.totalWindowStartedAt.getTime() >= TOTAL_WINDOW_MS;
