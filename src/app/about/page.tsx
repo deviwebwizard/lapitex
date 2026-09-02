@@ -44,8 +44,8 @@ export default function AboutPage() {
           </div>
           <div className="rounded-3xl overflow-hidden shadow-2xl relative h-[500px]">
              <img 
-              src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800" 
-              alt="MacBook on desk" 
+              src="/our-story.png" 
+              alt="Lapitex team in the store" 
               className="w-full h-full object-cover"
             />
           </div>
