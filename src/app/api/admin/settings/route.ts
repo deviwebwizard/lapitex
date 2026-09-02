@@ -14,14 +14,15 @@ export async function GET(req: NextRequest) {
     const settings = await prisma.siteSetting.findMany();
     
     // Convert array to object { key: value }
-    const settingsObj = settings.reduce((acc: any, setting) => {
+    const typedSettings = settings as Array<{ key: string; value: string }>;
+    const settingsObj: Record<string, unknown> = {};
+    for (const setting of typedSettings) {
       try {
-        acc[setting.key] = JSON.parse(setting.value);
+        settingsObj[setting.key] = JSON.parse(setting.value);
       } catch {
-        acc[setting.key] = setting.value;
+        settingsObj[setting.key] = setting.value;
       }
-      return acc;
-    }, {});
+    }
 
     return NextResponse.json({ settings: settingsObj });
   } catch (error) {

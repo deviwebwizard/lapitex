@@ -27,7 +27,8 @@ export async function POST(req: Request) {
       where: { id: { in: productIds } }
     });
 
-    const productMap = new Map(dbProducts.map(p => [p.id, p]));
+    const typedProducts = dbProducts as Array<{ id: string; stock: number; name: string; price: number }>;
+    const productMap = new Map(typedProducts.map(product => [product.id, product]));
 
     let calculatedSubTotal = 0;
 

@@ -12,7 +12,11 @@ export async function POST(req: NextRequest) {
 
     const userId = (session.user as any).id;
     const body = await req.json();
-    const { action, productId, cartItems } = body;
+    const { action, productId, cartItems } = body as {
+      action?: string;
+      productId?: string;
+      cartItems?: Array<{ id: string; quantity: number }>;
+    };
 
     // Always update lastOnline
     await prisma.user.update({
