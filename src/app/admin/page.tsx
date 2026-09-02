@@ -24,6 +24,15 @@ export default async function AdminDashboard() {
     where: { lastOnline: { gte: oneDayAgo } }
   });
 
+  type RecentUser = {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    createdAt: Date;
+  };
+  const typedRecentUsers = recentUsers as RecentUser[];
+
   const metrics = [
     { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: IndianRupee, gradient: "from-emerald-400 to-emerald-600", bgGlow: "rgba(52,211,153,0.15)" },
     { label: "Total Users", value: userCount, icon: Users, gradient: "from-[#e1467c] to-[#f472a8]", bgGlow: "rgba(225,70,124,0.12)" },
@@ -68,7 +77,7 @@ export default async function AdminDashboard() {
             </Link>
           </div>
           <div className="space-y-4">
-            {recentUsers.map(user => (
+            {typedRecentUsers.map(user => (
               <div key={user.id} className="flex items-center justify-between p-3 rounded-2xl hover:bg-pink-50/50 transition-all duration-200 group">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm mr-4 text-white shadow-md"

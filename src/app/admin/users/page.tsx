@@ -4,8 +4,24 @@ import { Mail, Package, ShoppingCart, Eye, Clock, Crown } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
+type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+  lastOnline: Date;
+  _count: {
+    orders: number;
+    views: number;
+    cartItems: number;
+  };
+  cartItems: Array<{ id: string; product: { name: string } }>;
+  views: Array<{ id: string; product: { name: string } }>;
+};
+
 export default async function AdminUsersPage() {
-  const users = await prisma.user.findMany({
+  const users: AdminUser[] = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
     include: {
       _count: {
