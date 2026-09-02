@@ -147,11 +147,11 @@ export default function AdminCategoriesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-black text-[#2d1a26] tracking-tight flex items-center gap-2">
             <ListTree className="text-[#e1467c]" />
             Category Management
           </h1>
-          <p className="text-sm text-white/60 mt-1">Manage nested categories for the main navigation</p>
+          <p className="text-sm text-[#4a1a2e]/60 mt-1">Manage nested categories for the main navigation</p>
         </div>
         {!isAdding && (
           <button onClick={() => setIsAdding(true)} className="clay-btn px-4 py-2 text-sm font-bold text-white flex items-center gap-2">
@@ -163,12 +163,12 @@ export default function AdminCategoriesPage() {
       {isAdding && (
         <div className="glass-card p-6 rounded-2xl animate-fade-in">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-white">{editingId ? "Edit Category" : "New Category"}</h3>
-            <button onClick={resetForm} className="text-white/50 hover:text-white"><X className="w-5 h-5" /></button>
+            <h3 className="text-lg font-bold text-[#2d1a26]">{editingId ? "Edit Category" : "New Category"}</h3>
+            <button onClick={resetForm} className="text-[#4a1a2e]/50 hover:text-[#2d1a26]"><X className="w-5 h-5" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1">Name</label>
+              <label className="block text-xs font-semibold text-[#4a1a2e]/70 mb-1">Name</label>
               <input
                 type="text"
                 value={formData.name}
@@ -181,26 +181,26 @@ export default function AdminCategoriesPage() {
                     setFormData({ ...formData, name: val });
                   }
                 }}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#e1467c]"
+                className="w-full px-3 py-2 bg-white/70 border border-[#4a1a2e]/15 rounded-xl text-[#2d1a26] placeholder:text-[#4a1a2e]/40 focus:outline-none focus:border-[#e1467c]"
                 placeholder="e.g. Laptops"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1">Slug</label>
+              <label className="block text-xs font-semibold text-[#4a1a2e]/70 mb-1">Slug</label>
               <input
                 type="text"
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#e1467c]"
+                className="w-full px-3 py-2 bg-white/70 border border-[#4a1a2e]/15 rounded-xl text-[#2d1a26] placeholder:text-[#4a1a2e]/40 focus:outline-none focus:border-[#e1467c]"
                 placeholder="e.g. laptops"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1">Parent (Optional)</label>
+              <label className="block text-xs font-semibold text-[#4a1a2e]/70 mb-1">Parent (Optional)</label>
               <select
                 value={formData.parentId}
                 onChange={(e) => setFormData({ ...formData, parentId: e.target.value })}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#e1467c] [&>option]:text-black"
+                className="w-full px-3 py-2 bg-white/70 border border-[#4a1a2e]/15 rounded-xl text-[#2d1a26] focus:outline-none focus:border-[#e1467c] [&>option]:text-black"
               >
                 <option value="">None (Root Category)</option>
                 {flatCats.map(c => (
@@ -218,11 +218,11 @@ export default function AdminCategoriesPage() {
       )}
 
       {loading ? (
-        <div className="text-white/50 text-center py-12 animate-pulse">Loading categories...</div>
+        <div className="text-[#4a1a2e]/50 text-center py-12 animate-pulse">Loading categories...</div>
       ) : (
         <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
           {categories.length === 0 ? (
-            <div className="text-center py-12 text-white/40">No categories found. Create a root category to begin.</div>
+            <div className="text-center py-12 text-[#4a1a2e]/60">No categories found. Create a root category to begin.</div>
           ) : (
             <div className="space-y-4">
               {renderTree(categories)}
