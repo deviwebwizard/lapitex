@@ -4,11 +4,6 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import Razorpay from "razorpay";
 
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "",
-});
-
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -21,6 +16,15 @@ export async function POST(req: Request) {
     if (!items || !items.length) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
+
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    if (!keyId || !keySecret) {
+      console.error("Razorpay credentials are not configured");
+      return NextResponse.json({ error: "Online payment is not configured" }, { status: 503 });
+    }
+
+    const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
 
     const productIds = items.map((item: any) => item.id);
     const dbProducts = await prisma.product.findMany({
