@@ -3,15 +3,22 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { User, Package } from "lucide-react";
 import prisma from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
 
-type AccountOrder = Prisma.OrderGetPayload<{
-  include: {
-    orderItems: {
-      include: { product: true };
+type AccountOrder = {
+  id: string;
+  createdAt: Date;
+  total: number;
+  status: string;
+  orderItems: Array<{
+    id: string;
+    quantity: number;
+    price: number;
+    product: {
+      name: string;
+      imageUrl: string | null;
     };
-  };
-}>;
+  }>;
+};
 
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
