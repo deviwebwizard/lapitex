@@ -108,7 +108,7 @@ export function ProductTabs({ description, specifications, condition }: ProductT
             <div>
               <h4 className="font-bold text-gray-900 mb-3">Support Channels</h4>
               <p className="text-gray-600 text-sm md:text-base">
-                For warranty claims or technical support, please contact us at <strong>support@lapitex.com</strong> or call our toll-free number <strong>1800-LAPITEX</strong>.
+                For warranty claims or technical support, please contact us at <strong>support@lapitex.com</strong> or call us at <strong>+91 6200144824</strong>.
               </p>
             </div>
           </div>

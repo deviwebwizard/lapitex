@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Phone, Clock, Navigation } from "lucide-react";
+import { MapPin, Phone, Clock, Navigation, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
 export default function StorePage() {
@@ -76,9 +76,17 @@ export default function StorePage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-1">Contact</h3>
-                    <a href="tel:+918000000000" className="text-gray-600 hover:text-primary font-medium transition-colors">
-                      Tap to Call Us
-                    </a>
+                    <div className="space-y-1.5">
+                      <a href="tel:+916200144824" className="block text-gray-600 hover:text-primary font-medium transition-colors">
+                        Call: +91 6200144824
+                      </a>
+                      <a href="https://wa.me/918809975386" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-gray-600 hover:text-green-600 font-medium transition-colors">
+                        <MessageCircle className="w-4 h-4" /> WhatsApp: +91 8809975386
+                      </a>
+                      <a href="https://wa.me/918789710408" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-gray-600 hover:text-green-600 font-medium transition-colors">
+                        <MessageCircle className="w-4 h-4" /> WhatsApp: +91 8789710408
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -107,23 +107,43 @@ export default async function Home() {
 
       {/* Promotional Banners Row */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="/shop?category=Laptops" className="block rounded-2xl overflow-hidden relative group shadow-md">
+            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=800" alt="New Laptops" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-6">
+              <div className="text-white">
+                <h3 className="text-xl font-bold mb-2">Buy New Laptops</h3>
+                <p className="text-gray-200 mb-4 text-sm">Latest models for work and play</p>
+                <span className="bg-primary px-4 py-2 rounded-md font-bold text-sm">Shop Now</span>
+              </div>
+            </div>
+          </Link>
           <Link href="/shop?category=Laptops" className="block rounded-2xl overflow-hidden relative group shadow-md">
             <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800" alt="Refurbished Business Laptops" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-6">
               <div className="text-white">
-                <h3 className="text-2xl font-bold mb-2">Second hand Laptops</h3>
-                <p className="text-gray-200 mb-4">Up to 40% Off on Dell, HP & Lenovo</p>
+                <h3 className="text-xl font-bold mb-2">Second hand Laptops</h3>
+                <p className="text-gray-200 mb-4 text-sm">Up to 40% Off on Dell, HP & Lenovo</p>
                 <span className="bg-primary px-4 py-2 rounded-md font-bold text-sm">Shop Now</span>
               </div>
             </div>
           </Link>
           <Link href="/shop?category=Parts" className="block rounded-2xl overflow-hidden relative group shadow-md">
             <img src="https://images.unsplash.com/photo-1541560052-5e137f229371?auto=format&fit=crop&q=80&w=800" alt="PC Components" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-l from-primary/90 to-black/40 flex items-center justify-end p-8 text-right">
+            <div className="absolute inset-0 bg-gradient-to-l from-primary/90 to-black/40 flex items-center justify-end p-6 text-right">
               <div className="text-white">
-                <h3 className="text-2xl font-bold mb-2">Build Your Dream PC</h3>
-                <p className="text-gray-100 mb-4">Genuine Parts & Accessories</p>
+                <h3 className="text-xl font-bold mb-2">Build Your Dream PC</h3>
+                <p className="text-gray-100 mb-4 text-sm">Genuine Parts & Accessories</p>
+                <span className="bg-white text-primary px-4 py-2 rounded-md font-bold text-sm">Explore</span>
+              </div>
+            </div>
+          </Link>
+          <Link href="/shop?category=Parts" className="block rounded-2xl overflow-hidden relative group shadow-md">
+            <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7c4?auto=format&fit=crop&q=80&w=800" alt="Computer Parts" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-l from-primary/90 to-black/40 flex items-center justify-end p-6 text-right">
+              <div className="text-white">
+                <h3 className="text-xl font-bold mb-2">Buy Parts</h3>
+                <p className="text-gray-100 mb-4 text-sm">Upgrade your setup with quality parts</p>
                 <span className="bg-white text-primary px-4 py-2 rounded-md font-bold text-sm">Explore</span>
               </div>
             </div>

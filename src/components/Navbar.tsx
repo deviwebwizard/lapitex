@@ -335,7 +335,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
             {/* Bulk Enquiry */}
             <div className="mt-4">
               <a 
-                href="tel:+919535698866"
+                href="tel:+916200144824"
                 className="flex items-center justify-between w-full p-3.5 rounded-2xl transition-all hover:scale-[0.98] active:scale-[0.96]"
                 style={{ background: 'linear-gradient(135deg, #e1467c, #c23066)' }}
               >
@@ -345,7 +345,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-[10px] font-semibold text-white/80">Bulk Enquiries</span>
-                    <span className="text-sm font-bold text-white tracking-wide">+91-9535698866</span>
+                    <span className="text-sm font-bold text-white tracking-wide">+91-6200144824</span>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-white/60" />
