@@ -48,7 +48,7 @@ export default function StorePage() {
                   <div>
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-1">Address</h3>
                     <h3 className="text-xl font-bold text-[#2d1a26] mb-2 flex items-center gap-2">
-                      <Logo className="text-xl" /> IT SOLUTION
+                      <Logo className="text-xl" />
                     </h3>
                     <p className="text-gray-600 font-medium leading-relaxed">
                       Union bank in building, Chandi vayapar bhawan,<br/>

@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-6">
           <div className="w-72 h-28 rounded-3xl flex items-center justify-center shadow-lg overflow-hidden p-2 border border-pink-200/60" style={{ background: 'linear-gradient(135deg, #fff0f5, #fce4ec)', boxShadow: '0 8px 25px rgba(225,70,124,0.15)' }}>
-            <Image src="/lapitex_logo.png" alt="Lapitex Logo" width={300} height={100} className="w-full h-full object-contain scale-[2.2]" />
+            <Image src="/lapitex_logo.png" alt="Lapitex Logo" width={700} height={385} className="w-full h-full object-contain" />
           </div>
         </div>
         <h2 className="text-center text-3xl font-black text-[#2d1a26] tracking-tight">
