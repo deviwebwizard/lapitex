@@ -4,10 +4,12 @@ const { PrismaPg } = require('@prisma/adapter-pg')
 const { randomBytes, scryptSync } = require('crypto')
 
 const email = (process.env.ADMIN_EMAIL || 'admin@lapitex.com').trim().toLowerCase()
-const password = process.env.ADMIN_PASSWORD
+// ADMIN_PASSWORD is preferred for an explicit reset; fall back to the
+// existing Railway variable so changing that variable can be applied directly.
+const password = process.env.ADMIN_PASSWORD || process.env.ADMIN_INITIAL_PASSWORD
 
 if (!password) {
-  throw new Error('Set ADMIN_PASSWORD before running this command.')
+  throw new Error('Set ADMIN_PASSWORD or ADMIN_INITIAL_PASSWORD before running this command.')
 }
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
