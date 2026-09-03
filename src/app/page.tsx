@@ -1,6 +1,6 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
-import { ArrowRight, Monitor, Cpu, ShieldCheck, Laptop, HardDrive, Wrench } from "lucide-react";
+import { ArrowRight, Monitor, Cpu, ShieldCheck, Laptop, Wrench } from "lucide-react";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { CompareButton } from "@/components/CompareButton";
 import type { Product } from "@/types/product";
@@ -93,13 +93,7 @@ export default async function Home() {
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Cpu className="h-8 w-8" />
               </div>
-              <span className="font-semibold text-gray-700 group-hover:text-primary">Processors</span>
-            </Link>
-            <Link href="/shop?category=Parts" className="flex flex-col items-center group">
-              <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                <HardDrive className="h-8 w-8" />
-              </div>
-              <span className="font-semibold text-gray-700 group-hover:text-primary">Storage & RAM</span>
+              <span className="font-semibold text-gray-700 group-hover:text-primary">Accessories &amp; Parts</span>
             </Link>
             <Link href="/store" className="flex flex-col items-center group">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">

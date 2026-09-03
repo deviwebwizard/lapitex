@@ -32,7 +32,7 @@ export function LayoutShell({
               <Logo className="text-2xl" />
             </div>
             <p className="text-sm text-white/30">
-              Premium refurbished IT solutions. We believe in quality, sustainability, and exceptional performance.
+              Premium refurbished Lapitex IT solutions. We believe in quality, sustainability, and exceptional performance.
             </p>
           </div>
           <div>
@@ -143,7 +143,7 @@ export function LayoutShell({
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-white/5 text-sm text-center text-white/20">
-          <p>&copy; {new Date().getFullYear()} Lapitex IT Solutions. All rights reserved.</p>
+          <p>&copy; 2024 Lapitex IT Solutions. All rights reserved.</p>
         </div>
       </footer>
       <a
