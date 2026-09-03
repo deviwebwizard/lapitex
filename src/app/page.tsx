@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { ArrowRight, Monitor, Cpu, ShieldCheck, Laptop, Wrench } from "lucide-react";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { CompareButton } from "@/components/CompareButton";
+import { PromotionalCard } from "@/components/PromotionalCard";
 import type { Product } from "@/types/product";
 
 type SaleBanner = { isActive: boolean; text: string };
@@ -76,26 +77,26 @@ export default async function Home() {
       <section className="py-10 bg-white border-b border-border shadow-sm relative z-10 -mt-6 mx-4 sm:mx-6 lg:mx-8 rounded-xl px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-center text-xl font-bold text-gray-800 mb-6 uppercase tracking-widest">Shop by Category</h2>
-          <div className="flex flex-wrap justify-center gap-8">
-            <Link href="/shop?category=Laptops" className="flex flex-col items-center group">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 max-w-5xl mx-auto">
+            <Link href="/shop?category=Laptops" className="flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Laptop className="h-8 w-8" />
               </div>
               <span className="font-semibold text-gray-700 group-hover:text-primary">Laptops</span>
             </Link>
-            <Link href="/shop?category=Desktops" className="flex flex-col items-center group">
+            <Link href="/shop?category=Desktops" className="flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Monitor className="h-8 w-8" />
               </div>
               <span className="font-semibold text-gray-700 group-hover:text-primary">Desktops</span>
             </Link>
-            <Link href="/shop?category=Parts" className="flex flex-col items-center group">
+            <Link href="/shop?category=Parts" className="flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Cpu className="h-8 w-8" />
               </div>
               <span className="font-semibold text-gray-700 group-hover:text-primary">Accessories &amp; Parts</span>
             </Link>
-            <Link href="/store" className="flex flex-col items-center group">
+            <Link href="/store" className="flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Wrench className="h-8 w-8" />
               </div>
@@ -108,46 +109,10 @@ export default async function Home() {
       {/* Promotional Banners Row */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link href="/shop?category=Laptops" className="block rounded-2xl overflow-hidden relative group shadow-md">
-            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=800" alt="New Laptops" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-6">
-              <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">Buy New Laptops</h3>
-                <p className="text-gray-200 mb-4 text-sm">Latest models for work and play</p>
-                <span className="bg-primary px-4 py-2 rounded-md font-bold text-sm">Shop Now</span>
-              </div>
-            </div>
-          </Link>
-          <Link href="/shop?category=Laptops" className="block rounded-2xl overflow-hidden relative group shadow-md">
-            <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800" alt="Refurbished Business Laptops" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-6">
-              <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">Refurbished Laptops</h3>
-                <p className="text-gray-200 mb-4 text-sm">Up to 40% Off on Dell, HP & Lenovo</p>
-                <span className="bg-primary px-4 py-2 rounded-md font-bold text-sm">Shop Now</span>
-              </div>
-            </div>
-          </Link>
-          <Link href="/shop?category=Parts" className="block rounded-2xl overflow-hidden relative group shadow-md">
-            <img src="https://images.unsplash.com/photo-1541560052-5e137f229371?auto=format&fit=crop&q=80&w=800" alt="PC Components" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-l from-primary/90 to-black/40 flex items-center justify-end p-6 text-right">
-              <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">Build Your Dream PC</h3>
-                <p className="text-gray-100 mb-4 text-sm">Genuine Parts & Accessories</p>
-                <span className="bg-white text-primary px-4 py-2 rounded-md font-bold text-sm">Explore</span>
-              </div>
-            </div>
-          </Link>
-          <Link href="/shop?category=Parts" className="block rounded-2xl overflow-hidden relative group shadow-md">
-            <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7c4?auto=format&fit=crop&q=80&w=800" alt="Computer Parts" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-l from-primary/90 to-black/40 flex items-center justify-end p-6 text-right">
-              <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">Buy Parts</h3>
-                <p className="text-gray-100 mb-4 text-sm">Upgrade your setup with quality parts</p>
-                <span className="bg-white text-primary px-4 py-2 rounded-md font-bold text-sm">Explore</span>
-              </div>
-            </div>
-          </Link>
+          <PromotionalCard href="/shop?category=Laptops" title="Buy New Laptops" description="Latest models for work and play" action="Shop Now" images={["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800"]} />
+          <PromotionalCard href="/shop?category=Laptops" title="Refurbished Laptops" description="Up to 40% Off on Dell, HP & Lenovo" action="Shop Now" images={["https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=800"]} />
+          <PromotionalCard href="/shop?category=Parts" title="Build Your Dream PC" description="Genuine Parts & Accessories" action="Explore" align="right" images={["https://images.unsplash.com/photo-1541560052-5e137f229371?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&q=80&w=800"]} />
+          <PromotionalCard href="/shop?category=Parts" title="Buy Parts" description="Upgrade your setup with quality parts" action="Explore" align="right" images={["https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7c4?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&q=80&w=800"]} />
         </div>
       </section>
 
