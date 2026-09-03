@@ -2,6 +2,15 @@ import Link from "next/link";
 import { MapPin, Phone, Clock, Navigation, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
+function SocialIcon({ type, className }: { type: "instagram" | "facebook" | "youtube"; className?: string }) {
+  const paths = {
+    instagram: "M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6Zm8.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z",
+    facebook: "M14 8h3V4h-3c-3.3 0-5 2-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1Z",
+    youtube: "M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z",
+  };
+  return <svg viewBox="0 0 24 24" aria-hidden="true" className={className}><path d={paths[type]} fill="currentColor" /></svg>;
+}
+
 export default function StorePage() {
   return (
     <div className="bg-gray-50/50 min-h-screen pb-24 md:pb-12 pt-16 md:pt-24">
@@ -66,7 +75,7 @@ export default function StorePage() {
                   <div>
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-1">Opening Hours</h3>
                     <p className="text-gray-600 font-medium">Monday - Saturday: 10:30 AM - 8:00 PM</p>
-                    <p className="text-gray-600 font-medium">Sunday: Closed</p>
+                    <p className="text-gray-600 font-medium">Sunday: 12:00 PM - 5:00 PM</p>
                   </div>
                 </div>
 
@@ -77,9 +86,6 @@ export default function StorePage() {
                   <div>
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-1">Contact</h3>
                     <div className="space-y-1.5">
-                      <a href="tel:+916200144824" className="block text-gray-600 hover:text-primary font-medium transition-colors">
-                        Call: +91 6200144824
-                      </a>
                       <a href="https://wa.me/918809975386" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-gray-600 hover:text-green-600 font-medium transition-colors">
                         <MessageCircle className="w-4 h-4" /> WhatsApp: +91 8809975386
                       </a>
@@ -119,6 +125,37 @@ export default function StorePage() {
             ></iframe>
           </div>
 
+        </div>
+
+        {/* Social Links */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+          <a
+            href="https://www.instagram.com/lapitex_it_solutions/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between rounded-2xl bg-white/85 border border-pink-100 px-6 py-5 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all"
+          >
+            <span className="font-bold text-gray-800">Instagram</span>
+            <SocialIcon type="instagram" className="w-7 h-7 text-pink-500" />
+          </a>
+          <a
+            href="https://www.facebook.com/lapi.tex.2025/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between rounded-2xl bg-white/85 border border-blue-100 px-6 py-5 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all"
+          >
+            <span className="font-bold text-gray-800">Facebook</span>
+            <SocialIcon type="facebook" className="w-7 h-7 text-blue-600" />
+          </a>
+          <a
+            href="https://www.youtube.com/channel/UCP-jwgZHGVovyKdYZm4yFIQ"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between rounded-2xl bg-white/85 border border-red-100 px-6 py-5 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all"
+          >
+            <span className="font-bold text-gray-800">YouTube</span>
+            <SocialIcon type="youtube" className="w-7 h-7 text-red-600" />
+          </a>
         </div>
       </div>
     </div>
