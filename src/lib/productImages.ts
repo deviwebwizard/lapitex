@@ -8,7 +8,14 @@ const galleryImages = [
   "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=1000",
 ];
 
-export function getProductImages(imageUrl: string | null, productId: string, count: number) {
+export function getProductImages(imageUrl: string | null, productId: string, count: number, imageUrls?: string | null) {
   const fallback = galleryImages.map((_, index) => galleryImages[(index + productId.length) % galleryImages.length]);
-  return Array.from(new Set([imageUrl, ...fallback].filter((image): image is string => Boolean(image)))).slice(0, count);
+  let uploadedImages: string[] = [];
+  if (imageUrls) {
+    try {
+      const parsed = JSON.parse(imageUrls);
+      if (Array.isArray(parsed)) uploadedImages = parsed.filter((image): image is string => typeof image === "string" && Boolean(image));
+    } catch { /* Keep legacy single-image behavior for malformed data. */ }
+  }
+  return Array.from(new Set([...uploadedImages, imageUrl, ...fallback].filter((image): image is string => Boolean(image)))).slice(0, count);
 }

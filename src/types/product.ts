@@ -8,6 +8,7 @@ export type Product = {
   category: string;
   condition: string;
   imageUrl: string | null;
+  imageUrls?: string | null;
   discountBadge: string | null;
   isFeatured: boolean;
   createdAt: Date;

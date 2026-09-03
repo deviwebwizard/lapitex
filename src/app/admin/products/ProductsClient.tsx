@@ -13,6 +13,7 @@ type Product = {
   category: string;
   condition: string;
   imageUrl: string | null;
+  imageUrls: string | null;
   discountBadge: string | null;
   isFeatured: boolean;
   description: string;
@@ -44,6 +45,14 @@ function SafeImagePreview({ src, alt, className = "w-full h-full object-cover" }
   );
 }
 
+function parseImageUrls(value: string | null | undefined, fallback: string | null = null) {
+  try {
+    const parsed = value ? JSON.parse(value) : [];
+    if (Array.isArray(parsed)) return parsed.filter((image): image is string => typeof image === "string").slice(0, 5);
+  } catch { /* Use the legacy image field below. */ }
+  return fallback ? [fallback] : [];
+}
+
 export default function ProductsClient({ initialProducts }: { initialProducts: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [search, setSearch] = useState("");
@@ -56,7 +65,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
 
   const [formData, setFormData] = useState({
     name: "", description: "", price: "", originalPrice: "", stock: "0",
-    category: "", condition: "Refurbished", imageUrl: "", discountBadge: "", isFeatured: false,
+    category: "", condition: "Refurbished", imageUrls: ["", "", "", "", ""], discountBadge: "", isFeatured: false,
   });
 
   const filteredProducts = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
@@ -68,16 +77,16 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
         name: product.name, description: product.description,
         price: product.price.toString(), originalPrice: product.originalPrice ? product.originalPrice.toString() : "",
         stock: product.stock.toString(), category: product.category,
-        condition: product.condition, imageUrl: product.imageUrl || "", discountBadge: product.discountBadge || "", isFeatured: product.isFeatured,
+        condition: product.condition, imageUrls: [...parseImageUrls(product.imageUrls, product.imageUrl), "", "", "", "", ""].slice(0, 5), discountBadge: product.discountBadge || "", isFeatured: product.isFeatured,
       });
     } else {
       setEditingProduct(null);
-      setFormData({ name: "", description: "", price: "", originalPrice: "", stock: "0", category: "", condition: "Refurbished", imageUrl: "", discountBadge: "", isFeatured: false });
+      setFormData({ name: "", description: "", price: "", originalPrice: "", stock: "0", category: "", condition: "Refurbished", imageUrls: ["", "", "", "", ""], discountBadge: "", isFeatured: false });
     }
     setIsModalOpen(true);
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, imageIndex: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
@@ -86,7 +95,11 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
     try {
       const res = await fetch("/api/upload", { method: "POST", body: form });
       const data = await res.json();
-      if (data.url) setFormData({ ...formData, imageUrl: data.url });
+      if (data.url) {
+        const imageUrls = [...formData.imageUrls];
+        imageUrls[imageIndex] = data.url;
+        setFormData({ ...formData, imageUrls });
+      }
       else alert("Upload failed: " + data.error);
     } catch { alert("Error uploading file"); }
     finally { setUploading(false); }
@@ -98,10 +111,11 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
     try {
       const url = editingProduct ? `/api/admin/products/${editingProduct.id}` : `/api/admin/products`;
       const method = editingProduct ? "PUT" : "POST";
-      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      const payload = { ...formData, imageUrl: formData.imageUrls.find(Boolean) || null };
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (res.ok) {
         const { product } = await res.json();
-        if (editingProduct) setProducts(products.map(p => p.id === product.id ? { ...p, _count: editingProduct._count } : p));
+        if (editingProduct) setProducts(products.map(p => p.id === product.id ? { ...product, _count: editingProduct._count } : p));
         else setProducts([{ ...product, _count: { orderItems: 0, views: 0, cartItems: 0 } }, ...products]);
         setIsModalOpen(false);
         router.refresh();
@@ -159,7 +173,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
             <div className="flex items-start gap-4">
               {/* Image */}
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-50 to-white border border-pink-100/40 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-sm">
-                <SafeImagePreview src={product.imageUrl} alt={product.name} />
+                <SafeImagePreview src={parseImageUrls(product.imageUrls, product.imageUrl)[0] || null} alt={product.name} />
               </div>
               
               {/* Info */}
@@ -289,23 +303,24 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                 </div>
               </div>
 
-              {/* Image Upload */}
+              {/* Five-image product gallery */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Product Image</label>
-                <div className="flex gap-4">
-                  <div className="flex-1 space-y-2">
-                    <input value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} placeholder="Image URL (e.g. https://... or upload below)" className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] placeholder-[#4a1a2e]/20" />
-                    <div className="relative">
-                      <input type="file" accept="image/*" onChange={handleFileUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                      <div className="w-full px-4 py-3 bg-pink-50/40 border-2 border-dashed border-pink-200/60 rounded-2xl text-center text-sm font-semibold text-[#e1467c]/60 hover:bg-pink-50/80 hover:border-[#e1467c]/40 transition-all flex items-center justify-center gap-2">
-                        <Upload className="w-4 h-4" />
-                        {uploading ? "Uploading..." : "Upload Image"}
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Product Gallery (up to 5 images)</label>
+                  <span className="text-[10px] text-[#4a1a2e]/40">First 2 appear in listings</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {formData.imageUrls.map((image, index) => (
+                    <div key={index} className="space-y-2 rounded-2xl border border-pink-100/40 bg-pink-50/20 p-3">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#4a1a2e]/50">Image {index + 1}</p>
+                      <input value={image} onChange={e => { const imageUrls = [...formData.imageUrls]; imageUrls[index] = e.target.value; setFormData({ ...formData, imageUrls }); }} placeholder="Image URL or upload" className="w-full px-3 py-2.5 bg-white/70 border border-pink-100/40 rounded-xl text-xs font-medium text-[#2d1a26] placeholder-[#4a1a2e]/20" />
+                      <div className="relative">
+                        <input type="file" accept="image/*" onChange={e => handleFileUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                        <div className="w-full px-3 py-2.5 bg-white/70 border-2 border-dashed border-pink-200/60 rounded-xl text-center text-xs font-semibold text-[#e1467c]/60 hover:bg-pink-50/80 transition-all flex items-center justify-center gap-2"><Upload className="w-3.5 h-3.5" /> {uploading ? "Uploading..." : "Upload Image"}</div>
                       </div>
+                      <div className="h-24 rounded-xl overflow-hidden bg-white/60"><SafeImagePreview src={image || null} alt={`Product image ${index + 1}`} /></div>
                     </div>
-                  </div>
-                  <div className="w-28 h-28 rounded-2xl border border-pink-100/40 overflow-hidden bg-pink-50/30 flex-shrink-0 relative shadow-sm">
-                    <SafeImagePreview src={formData.imageUrl} alt="Modal Preview" />
-                  </div>
+                  ))}
                 </div>
               </div>
             </form>

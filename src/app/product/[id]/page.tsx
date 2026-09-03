@@ -41,7 +41,7 @@ export default async function ProductPage({
             {/* Left: Manual product image gallery */}
             <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col border-b md:border-b-0 md:border-r border-gray-100 relative">
               {product.imageUrl ? (
-                <ProductGallery images={getProductImages(product.imageUrl, product.id, 5)} alt={product.name} />
+                <ProductGallery images={getProductImages(product.imageUrl, product.id, 5, product.imageUrls)} alt={product.name} />
               ) : (
                 <div className="flex-grow flex items-center justify-center bg-gray-50 rounded-[2rem] min-h-[300px] md:min-h-[450px] text-gray-400 text-lg font-medium">No Image Available</div>
               )}

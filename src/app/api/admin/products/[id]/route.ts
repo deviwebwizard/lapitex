@@ -23,6 +23,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         condition: body.condition,
         stock: parseInt(body.stock),
         imageUrl: body.imageUrl,
+        imageUrls: Array.isArray(body.imageUrls) ? JSON.stringify(body.imageUrls.slice(0, 5).filter((url: unknown): url is string => typeof url === "string" && url.trim().length > 0)) : null,
         discountBadge: body.discountBadge || null,
         isFeatured: body.isFeatured
       }
