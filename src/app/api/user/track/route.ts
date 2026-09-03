@@ -12,10 +12,12 @@ export async function POST(req: NextRequest) {
 
     const userId = (session.user as any).id;
     const body = await req.json();
-    const { action, productId, cartItems } = body as {
+    const { action, productId, cartItems, path, query } = body as {
       action?: string;
       productId?: string;
       cartItems?: Array<{ id: string; quantity: number }>;
+      path?: string;
+      query?: string;
     };
 
     // Always update lastOnline
@@ -23,6 +25,17 @@ export async function POST(req: NextRequest) {
       where: { id: userId },
       data: { lastOnline: new Date() }
     });
+
+    if (action === "NAVIGATE" && typeof path === "string") {
+      await prisma.userActivity.create({
+        data: {
+          userId,
+          action,
+          path: path.slice(0, 500),
+          query: typeof query === "string" ? query.slice(0, 1000) : null,
+        },
+      });
+    }
 
     if (action === "VIEW_PRODUCT" && productId) {
       await prisma.productView.create({

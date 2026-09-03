@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { formatDistanceToNow } from "date-fns";
 import { Mail, Package, ShoppingCart, Eye, Clock, Crown } from "lucide-react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +48,7 @@ export default async function AdminUsersPage() {
       
       <div className="space-y-4">
         {users.map((user) => (
-          <div key={user.id} className="clay-card p-6 group">
+          <Link href={`/admin/users/${user.id}`} key={user.id} className="clay-card p-6 group block hover:-translate-y-1 transition-transform">
             <div className="flex flex-col md:flex-row md:items-center gap-5">
               
               {/* User Info */}
@@ -124,7 +125,7 @@ export default async function AdminUsersPage() {
                 )}
               </div>
             )}
-          </div>
+          </Link>
         ))}
 
         {users.length === 0 && (

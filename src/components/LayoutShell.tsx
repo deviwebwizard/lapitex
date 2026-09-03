@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import { Logo } from "./Logo";
 import Image from "next/image";
 import { Phone, MessageCircle } from "lucide-react";
+import { UserActivityTracker } from "./UserActivityTracker";
 
 export function LayoutShell({
   saleBanner,
@@ -24,6 +25,7 @@ export function LayoutShell({
   return (
     <>
       <Navbar saleBanner={saleBanner} />
+      <UserActivityTracker />
       <main className="flex-grow pt-20 md:pt-24">{children}</main>
       <footer className="bg-[#1a0e16] text-[#4a1a2e]/60 py-14 mt-auto border-t border-[#2d1a26]/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-5 gap-8">

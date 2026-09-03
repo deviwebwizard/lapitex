@@ -18,6 +18,7 @@ model User {
   orders     Order[]
   cartItems  CartItem[]
   views      ProductView[]
+  activities UserActivity[]
   adminSessions AdminSession[]
   lastOnline DateTime    @default(now())
 }
@@ -87,6 +88,19 @@ model ProductView {
 
   @@index([userId])
   @@index([productId])
+}
+
+model UserActivity {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  path      String?
+  query     String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, action])
 }
 
 model SiteSetting {
