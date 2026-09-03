@@ -7,6 +7,8 @@ import { CompareButton } from "@/components/CompareButton";
 import { ProductTabs } from "@/components/ProductTabs";
 import { parseSpecs } from "@/lib/parseSpecs";
 import ProductTracker from "@/components/ProductTracker";
+import { ProductGallery } from "@/components/ProductGallery";
+import { getProductImages } from "@/lib/productImages";
 
 export default async function ProductPage({
   params,
@@ -36,22 +38,18 @@ export default async function ProductPage({
         <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
           <div className="flex flex-col md:flex-row">
             
-            {/* Left: Image Gallery (Mocked as single image but with side thumbnails layout idea) */}
-            <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col border-b md:border-b-0 md:border-r border-gray-100">
-              <div className="flex-grow flex items-center justify-center bg-gray-50 rounded-[2rem] relative min-h-[300px] md:min-h-[450px] overflow-hidden border border-gray-100 shadow-inner group">
-                {product.imageUrl ? (
-                  <img 
-                    src={product.imageUrl} 
-                    alt={product.name} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="text-gray-400 text-lg font-medium">No Image Available</div>
-                )}
+            {/* Left: Manual product image gallery */}
+            <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col border-b md:border-b-0 md:border-r border-gray-100 relative">
+              {product.imageUrl ? (
+                <ProductGallery images={getProductImages(product.imageUrl, product.id, 5)} alt={product.name} />
+              ) : (
+                <div className="flex-grow flex items-center justify-center bg-gray-50 rounded-[2rem] min-h-[300px] md:min-h-[450px] text-gray-400 text-lg font-medium">No Image Available</div>
+              )}
+              {product.imageUrl && (
                 <div className="absolute top-4 right-4">
                   <CompareButton product={product} />
                 </div>
-              </div>
+              )}
               
               {/* Trust Badges - Mobile visible, Desktop also */}
               <div className="mt-8 grid grid-cols-2 gap-4">
