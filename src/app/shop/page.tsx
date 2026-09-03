@@ -16,6 +16,7 @@ export default async function ShopPage({
   const resolvedSearchParams = await searchParams;
   const categoryFilter = typeof resolvedSearchParams.category === 'string' ? resolvedSearchParams.category : undefined;
   const conditionFilter = typeof resolvedSearchParams.condition === 'string' ? resolvedSearchParams.condition : undefined;
+  const subcategoryFilter = typeof resolvedSearchParams.subcategory === 'string' ? resolvedSearchParams.subcategory : undefined;
   const minPrice = typeof resolvedSearchParams.min === 'string' ? parseInt(resolvedSearchParams.min) : undefined;
   const maxPrice = typeof resolvedSearchParams.max === 'string' ? parseInt(resolvedSearchParams.max) : undefined;
   const searchQuery = typeof resolvedSearchParams.q === 'string' ? resolvedSearchParams.q : undefined;
@@ -26,6 +27,18 @@ export default async function ShopPage({
   
   if (categoryFilter) whereClause.category = categoryFilter;
   if (conditionFilter) whereClause.condition = conditionFilter;
+  if (subcategoryFilter) {
+    // Brand/product filters are represented by the product name in the current
+    // product model, so no schema change is needed for the storefront filter.
+    const subcategoryNames = subcategoryFilter === 'H.P'
+      ? [{ contains: 'HP' }, { contains: 'H.P' }]
+      : [{ contains: subcategoryFilter }];
+    whereClause.AND = (whereClause.AND || []).concat(
+      subcategoryNames.length > 1
+        ? [{ OR: subcategoryNames.map((name) => ({ name })) }]
+        : [{ name: subcategoryNames[0] }]
+    );
+  }
   if (searchQuery) {
     whereClause.name = { contains: searchQuery }; // SQLite case-sensitivity might apply, but basic contains works
   }
