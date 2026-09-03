@@ -3,8 +3,52 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
+const defaultCategories = [
+  {
+    name: "Laptops",
+    slug: "Laptops",
+    children: ["H.P", "Dell", "Asus", "Macbook", "Lenovo", "Samsung", "Toshiba"],
+  },
+  {
+    name: "Desktops",
+    slug: "Desktops",
+    children: ["H.P", "Dell", "Intel", "Zebronics", "Gigabyte", "Ivoomi", "frontech", "zebion"],
+  },
+  {
+    name: "Parts & Upgrades",
+    slug: "Parts",
+    children: ["Keyboard", "Mouse", "Screen", "SSD", "RAM", "SMPS", "ATX", "Graphics card"],
+  },
+] as const;
+
+async function ensureDefaultCategories() {
+  const count = await (prisma as any).category.count();
+  if (count > 0) return;
+
+  for (const root of defaultCategories) {
+    const parent = await (prisma as any).category.upsert({
+      where: { slug: root.slug },
+      update: { name: root.name, parentId: null },
+      create: { name: root.name, slug: root.slug },
+    });
+
+    for (const name of root.children) {
+      await (prisma as any).category.upsert({
+        where: { slug: `${root.slug}-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}` },
+        update: { name, parentId: parent.id },
+        create: {
+          name,
+          slug: `${root.slug}-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+          parentId: parent.id,
+        },
+      });
+    }
+  }
+}
+
 export async function GET() {
   try {
+    await ensureDefaultCategories();
     const categories = await (prisma as any).category.findMany({
       include: {
         children: {
