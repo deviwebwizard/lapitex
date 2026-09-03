@@ -141,9 +141,9 @@ export default async function ShopPage({
             }) : (
               <div className="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
                 <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
-                <button onClick={() => window.location.href = '/shop'} className="mt-4 text-primary font-bold hover:underline">
+                <Link href="/shop" className="mt-4 inline-block text-primary font-bold hover:underline">
                   Clear all filters
-                </button>
+                </Link>
               </div>
             )}
           </div>
