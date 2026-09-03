@@ -176,6 +176,35 @@ body {
   0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+@keyframes sale-banner-marquee {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.sale-banner-marquee {
+  overflow: hidden;
+  width: 100%;
+}
+
+.sale-banner-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: sale-banner-marquee 18s linear infinite;
+}
+
+.sale-banner-marquee-item {
+  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sale-banner-marquee-track { animation: none; transform: translateX(-25%); }
+}
 .animate-shimmer {
   background: linear-gradient(90deg, transparent 30%, rgba(225,70,124,0.08) 50%, transparent 70%);
   background-size: 200% 100%;

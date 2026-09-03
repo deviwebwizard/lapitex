@@ -58,11 +58,17 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
         <div className="fixed top-0 w-full z-50 overflow-hidden">
           <div className="relative py-2.5 px-4 text-center" style={{ background: 'linear-gradient(135deg, #e1467c, #f472a8, #e1467c)' }}>
             <div className="absolute inset-0 opacity-20" style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
-            <p className="text-white text-xs font-bold tracking-widest uppercase relative z-10 flex items-center justify-center gap-2">
-              <Sparkles className="w-3.5 h-3.5" />
-              {saleBanner?.text}
-              <Sparkles className="w-3.5 h-3.5" />
-            </p>
+            <div className="sale-banner-marquee relative z-10" aria-label={saleBanner?.text}>
+              <div className="sale-banner-marquee-track">
+                {[0, 1].map((copy) => (
+                  <span key={copy} aria-hidden={copy === 1} className="sale-banner-marquee-item text-white text-xs font-bold tracking-widest uppercase">
+                    <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
+                    {saleBanner?.text}
+                    <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
