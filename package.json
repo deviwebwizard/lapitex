@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "prestart": "prisma db push",
     "start": "next start",
     "lint": "eslint",
     "migrate:passwords": "node prisma/migrate-passwords.js",

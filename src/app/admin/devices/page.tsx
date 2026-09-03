@@ -20,11 +20,16 @@ export default async function AdminDevicesPage() {
   const session = await getServerSession(authOptions);
   if (!session || (session.user as any).role !== "ADMIN") redirect("/login");
 
-  const sessions = await prisma.adminSession.findMany({
-    where: { userId: (session.user as any).id },
-    orderBy: { loginAt: "desc" },
-    take: 100,
-  });
+  let sessions: Awaited<ReturnType<typeof prisma.adminSession.findMany>> = [];
+  try {
+    sessions = await prisma.adminSession.findMany({
+      where: { userId: (session.user as any).id },
+      orderBy: { loginAt: "desc" },
+      take: 100,
+    });
+  } catch (error) {
+    console.error("[ADMIN_DEVICES_LOAD_ERROR]", error);
+  }
   const latestSessions = sessions.slice(0, 15);
   const activeCutoff = new Date(Date.now() - 15 * 60 * 1000);
   const activeSessions = sessions.filter((item) => !item.logoutAt && item.lastSeenAt >= activeCutoff);
