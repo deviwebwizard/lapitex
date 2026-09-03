@@ -71,7 +71,7 @@ export default async function ProductPage({
                   {product.category}
                 </span>
                 <span className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-                  {product.condition}
+                  {product.condition === 'Used' ? 'In-built' : product.condition}
                 </span>
               </div>
               

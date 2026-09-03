@@ -149,7 +149,7 @@ export function ShopFilters() {
         <div>
           <h4 className="font-bold text-sm mb-4 text-gray-900 uppercase tracking-wider">Condition</h4>
           <div className="space-y-3">
-            {[{ label: 'New', value: 'New' }, { label: 'Refurbished', value: 'Refurbished' }, { label: 'Inbuilt', value: 'Used' }].map(({ label, value }) => (
+            {[{ label: 'New', value: 'New' }, { label: 'Refurbished', value: 'Refurbished' }, { label: 'In-built', value: 'Used' }].map(({ label, value }) => (
               <label key={value} className="flex items-center space-x-3 cursor-pointer group">
                 <input 
                   type="checkbox" 

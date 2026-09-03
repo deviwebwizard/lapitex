@@ -119,7 +119,7 @@ export default async function ShopPage({
                       )}
                       
                       <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md text-[10px] font-bold px-3 py-1.5 rounded-full text-gray-600 shadow-sm border border-gray-100/50 uppercase tracking-widest">
-                        {product.condition}
+                        {product.condition === 'Used' ? 'In-built' : product.condition}
                       </div>
                     </div>
                     <div className="p-6 pb-2">

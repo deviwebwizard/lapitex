@@ -90,7 +90,7 @@ export function ProductTabs({ description, specifications, condition }: ProductT
             <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6">
               <h4 className="font-bold text-blue-900 text-lg mb-2">Standard Warranty</h4>
               <p className="text-blue-800 text-sm md:text-base leading-relaxed">
-                This {condition} product comes with a <strong>{condition === 'New' ? '1 Year' : '6 Months'}</strong> standard warranty. 
+                This {condition === 'Used' ? 'In-built' : condition} product comes with a <strong>{condition === 'New' ? '1 Year' : '6 Months'}</strong> standard warranty. 
                 Our warranty covers any hardware defects that may occur during normal usage.
               </p>
             </div>

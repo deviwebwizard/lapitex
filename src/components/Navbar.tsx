@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 const headerCategories = [
-  { id: "all", name: "All Products", slug: "", children: [] },
   { id: "laptops", name: "Laptops", slug: "Laptops", children: ["H.P", "Dell", "Asus", "Macbook", "Lenovo", "Samsung", "Toshiba"] },
   { id: "desktops", name: "Desktops", slug: "Desktops", children: ["H.P", "Dell", "Intel", "Zebronics", "Gigabyte", "Ivoomi", "frontech", "zebion"] },
   { id: "parts", name: "Parts & Upgrades", slug: "Parts", children: ["Keyboard", "Mouse", "Screen", "SSD", "RAM", "SMPS", "ATX", "Graphics card"] },
@@ -120,7 +119,6 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
                                 </Link>
                               </li>
                             ))}
-                            {category.children.length === 0 && <li className="text-xs text-[#4a1a2e]/40 py-2 px-3">Browse everything</li>}
                           </ul>
                         </div>
                       ))}
@@ -223,14 +221,6 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
           {/* Drawer Body */}
           <div className="flex-1 overflow-y-auto py-5 px-5 space-y-6">
             
-            <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-between text-base font-bold text-[#2d1a26] py-4 px-5 bg-gradient-to-r from-pink-50/80 to-white/60 rounded-2xl hover:from-pink-100/80 hover:to-white/80 transition-all border border-pink-100/40">
-              <span className="flex items-center gap-3">
-                <Sparkles className="w-4 h-4 text-[#e1467c]" />
-                All Products
-              </span>
-              <ChevronRight className="w-4 h-4 text-[#e1467c]/50" />
-            </Link>
-            
             {/* Devices */}
             <div className="px-1">
               <h4 className="text-[9px] font-black text-[#e1467c] uppercase tracking-[0.25em] mb-3 flex items-center gap-2">
@@ -306,7 +296,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
             {/* Bulk Enquiry */}
             <div className="mt-4">
               <a 
-                href="tel:+916200144824"
+                href="tel:+918789710408"
                 className="flex items-center justify-between w-full p-3.5 rounded-2xl transition-all hover:scale-[0.98] active:scale-[0.96]"
                 style={{ background: 'linear-gradient(135deg, #e1467c, #c23066)' }}
               >
@@ -316,7 +306,7 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-[10px] font-semibold text-white/80">Bulk Enquiries</span>
-                    <span className="text-sm font-bold text-white tracking-wide">+91-6200144824</span>
+                    <span className="text-sm font-bold text-white tracking-wide">+91-8789710408</span>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-white/60" />
