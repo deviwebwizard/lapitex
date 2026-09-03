@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Shield, Leaf, Target, Award } from "lucide-react";
+import { OurStoryCarousel } from "@/components/OurStoryCarousel";
 
 export default function AboutPage() {
   return (
@@ -42,13 +43,7 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <div className="rounded-3xl overflow-hidden shadow-2xl relative h-[500px]">
-             <img 
-              src="/our-story.png" 
-              alt="Lapitex team in the store" 
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <OurStoryCarousel />
         </div>
       </section>
 
