@@ -8,6 +8,13 @@ import { useCompareStore } from "@/store/compareStore";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
+const headerCategories = [
+  { id: "all", name: "All Products", slug: "", children: [] },
+  { id: "laptops", name: "Laptops", slug: "Laptops", children: ["H.P", "Dell", "Asus", "Macbook", "Lenovo", "Samsung", "Toshiba"] },
+  { id: "desktops", name: "Desktops", slug: "Desktops", children: ["H.P", "Dell", "Intel", "Zebronics", "Gigabyte", "Ivoomi", "frontech", "zebion"] },
+  { id: "parts", name: "Parts & Upgrades", slug: "Parts", children: ["Keyboard", "Mouse", "Screen", "SSD", "RAM", "SMPS", "ATX", "Graphics card"] },
+] as const;
+
 export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isStickyActive?: boolean; text: string } | null }) {
   const { data: session, status } = useSession();
   const totalItems = useCartStore((state) => state.totalItems());
@@ -17,20 +24,6 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
-
-  type Category = {
-    id: string;
-    name: string;
-    slug: string;
-    children: Category[];
-  };
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    fetch('/api/categories').then(res => res.json()).then(data => {
-      if (Array.isArray(data)) setCategories(data);
-    }).catch(console.error);
-  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -113,46 +106,24 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
                   {/* Mega Menu Dropdown */}
                   <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-3 transition-all duration-300 ${megaMenuOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
                     <div className="w-[600px] glass-card-strong rounded-3xl p-7 flex gap-7 justify-between">
-                      {categories.map(category => (
+                      {headerCategories.map(category => (
                         <div key={category.id} className="flex-1">
-                          <h4 className="text-[10px] font-black text-[#e1467c] uppercase tracking-[0.2em] mb-4 flex items-center gap-1.5">
+                          <Link href={category.slug ? `/shop?category=${encodeURIComponent(category.slug)}` : "/shop"} className="text-[10px] font-black text-[#e1467c] uppercase tracking-[0.2em] mb-4 flex items-center gap-1.5 hover:text-[#c23066]">
                             <span className="w-5 h-[2px] rounded-full bg-gradient-to-r from-[#e1467c] to-[#f472a8]" />
                             {category.name}
-                          </h4>
+                          </Link>
                           <ul className="space-y-1">
-                            {category.children?.map(sub => (
-                              <li key={sub.id} className="relative group/sub">
-                                <Link href={`/shop?category=${sub.slug}`} className="flex items-center justify-between text-sm text-[#4a1a2e] hover:text-[#e1467c] font-medium py-2.5 px-3 rounded-xl hover:bg-pink-50/80 transition-all duration-200">
-                                  <span>{sub.name}</span>
-                                  {sub.children && sub.children.length > 0 && <ChevronRight className="w-3 h-3 opacity-50" />}
+                            {category.children.map(sub => (
+                              <li key={sub}>
+                                <Link href={`/shop?category=${encodeURIComponent(category.slug)}&subcategory=${encodeURIComponent(sub)}`} className="block text-sm text-[#4a1a2e] hover:text-[#e1467c] font-medium py-2.5 px-3 rounded-xl hover:bg-pink-50/80 transition-all duration-200">
+                                  {sub}
                                 </Link>
-                                {/* Level 3 Dropdown (Hover) */}
-                                {sub.children && sub.children.length > 0 && (
-                                  <div className="absolute left-full top-0 ml-2 w-48 opacity-0 group-hover/sub:opacity-100 pointer-events-none group-hover/sub:pointer-events-auto transition-all duration-200 z-50">
-                                    <div className="glass-card-strong rounded-2xl p-3 shadow-xl border border-pink-100">
-                                      <ul className="space-y-1">
-                                        {sub.children.map(subsub => (
-                                          <li key={subsub.id}>
-                                            <Link href={`/shop?category=${subsub.slug}`} className="block text-sm text-[#4a1a2e] hover:text-[#e1467c] font-medium py-2 px-3 rounded-xl hover:bg-pink-50/80 transition-all">
-                                              {subsub.name}
-                                            </Link>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                )}
                               </li>
                             ))}
-                            {(!category.children || category.children.length === 0) && (
-                              <li className="text-xs text-[#4a1a2e]/40 py-2 px-3">No items yet</li>
-                            )}
+                            {category.children.length === 0 && <li className="text-xs text-[#4a1a2e]/40 py-2 px-3">Browse everything</li>}
                           </ul>
                         </div>
                       ))}
-                      {categories.length === 0 && (
-                        <div className="text-sm text-[#4a1a2e]/50 text-center w-full py-4">No categories configured</div>
-                      )}
                     </div>
                   </div>
                 </div>

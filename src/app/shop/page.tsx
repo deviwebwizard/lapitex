@@ -6,6 +6,8 @@ import { ShopFilters } from "@/components/ShopFilters";
 import { ShopSearch } from "@/components/ShopSearch";
 import { ShopSort } from "@/components/ShopSort";
 import { CompareButton } from "@/components/CompareButton";
+import { FeaturedProductImage } from "@/components/FeaturedProductImage";
+import { getProductImages } from "@/lib/productImages";
 import type { Product } from "@/types/product";
 
 export default async function ShopPage({
@@ -104,7 +106,7 @@ export default async function ShopPage({
                     <div className="h-56 overflow-hidden bg-gray-50 relative flex items-center justify-center border-b border-gray-100/50">
                       <CompareButton product={product} />
                       {product.imageUrl ? (
-                        <img src={product.imageUrl} alt={product.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                        <FeaturedProductImage images={getProductImages(product.imageUrl, product.id, 2)} alt={product.name} />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400 font-medium">No Image</div>
                       )}
