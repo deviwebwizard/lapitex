@@ -46,8 +46,16 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
     initialSettings.SHIPPING_FEE !== undefined ? Number(initialSettings.SHIPPING_FEE) : 0
   );
 
-  const defaultBanner = { isActive: true, isStickyActive: true, text: "Independence Day Sale! Use code IND77 for 10% off." };
-  const [banner, setBanner] = useState({ ...defaultBanner, ...(initialSettings.SALE_BANNER || {}) });
+  const defaultBannerText = "Independence Day Sale! Use code IND77 for 10% off.";
+  const savedBannerConfig = initialSettings.SALE_BANNER || {};
+  const legacyBannerText = savedBannerConfig.text || defaultBannerText;
+  const [banner, setBanner] = useState({
+    isActive: true,
+    isStickyActive: true,
+    ...savedBannerConfig,
+    mainText: savedBannerConfig.mainText || legacyBannerText,
+    stickyText: savedBannerConfig.stickyText || legacyBannerText,
+  });
 
   const defaultCarousel = [
     {
@@ -244,20 +252,29 @@ export default function SettingsClient({ initialSettings }: { initialSettings: a
           </button>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Banner Text</label>
+            <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Main Banner Text</label>
             <input 
-              value={banner.text} 
-              onChange={e => setBanner({ ...banner, text: e.target.value })} 
+              value={banner.mainText} 
+              onChange={e => setBanner({ ...banner, mainText: e.target.value })} 
               className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" 
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Sticky Banner Text</label>
+            <input
+              value={banner.stickyText}
+              onChange={e => setBanner({ ...banner, stickyText: e.target.value })}
+              className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]"
             />
           </div>
 
           {/* Live Preview */}
           {banner.isStickyActive && (
             <div className="mt-2 rounded-2xl overflow-hidden shadow-sm" style={{ background: 'linear-gradient(135deg, #e1467c, #f472a8, #e1467c)' }}>
-              <div className="p-1 text-[#2d1a26] text-[10px] font-black uppercase text-center bg-white/20 tracking-wider">Live Preview</div>
+              <div className="p-1 text-[#2d1a26] text-[10px] font-black uppercase text-center bg-white/20 tracking-wider">Sticky Banner Preview</div>
               <p className="text-white text-xs font-bold tracking-widest uppercase py-2.5 text-center flex items-center justify-center gap-2">
-                <Sparkles className="w-3.5 h-3.5" /> {banner.text} <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5" /> {banner.stickyText} <Sparkles className="w-3.5 h-3.5" />
               </p>
             </div>
           )}

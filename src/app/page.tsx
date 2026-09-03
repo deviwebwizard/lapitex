@@ -8,7 +8,7 @@ import { FeaturedProductImage } from "@/components/FeaturedProductImage";
 import { getProductImages } from "@/lib/productImages";
 import type { Product } from "@/types/product";
 
-type SaleBanner = { isActive: boolean; text: string };
+type SaleBanner = { isActive: boolean; text?: string; mainText?: string; stickyText?: string };
 
 export default async function Home() {
   const [featuredProducts, carouselSetting, saleBannerSetting] = await Promise.all([
@@ -35,8 +35,9 @@ export default async function Home() {
   if (saleBannerSetting) {
     try {
       const parsed = JSON.parse(saleBannerSetting.value) as Partial<SaleBanner>;
-      if (typeof parsed.isActive === "boolean" && typeof parsed.text === "string") {
-        saleBanner = parsed as SaleBanner;
+      const mainText = parsed.mainText || parsed.text || parsed.stickyText;
+      if (typeof parsed.isActive === "boolean" && typeof mainText === "string") {
+        saleBanner = { ...parsed, isActive: parsed.isActive, mainText };
       }
     } catch (e) {}
   }
@@ -60,7 +61,7 @@ export default async function Home() {
                 Live Now
               </div>
               <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter mb-2">
-                {saleBanner.text}
+                {saleBanner.mainText}
               </h2>
             </div>
             

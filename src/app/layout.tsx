@@ -25,7 +25,12 @@ export default async function RootLayout({
   let saleBanner = null;
   if (bannerSetting) {
     try {
-      saleBanner = JSON.parse(bannerSetting.value);
+      const parsed = JSON.parse(bannerSetting.value);
+      saleBanner = {
+        ...parsed,
+        mainText: parsed.mainText || parsed.text || parsed.stickyText || "",
+        stickyText: parsed.stickyText || parsed.text || parsed.mainText || "",
+      };
     } catch (e) {}
   }
 
