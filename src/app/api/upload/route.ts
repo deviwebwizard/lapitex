@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import fs from "fs";
-import path from "path";
-import { writeFile } from "fs/promises";
-import { randomBytes } from "node:crypto";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -45,21 +41,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "The uploaded file is not a valid image" }, { status: 400 });
     }
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    const extension = file.type.split("/")[1].replace("jpeg", "jpg");
-    const uniqueFilename = `${Date.now()}-${randomBytes(16).toString("hex")}.${extension}`;
-    const filePath = path.join(uploadDir, uniqueFilename);
-    
-    await writeFile(filePath, buffer);
+    // Railway instances have ephemeral filesystems. Persist the image content
+    // with the setting/product record instead of returning a local file URL
+    // that disappears after a restart or redeploy.
+    const dataUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
 
     return NextResponse.json({ 
       success: true, 
-      url: `/uploads/${uniqueFilename}` 
+      url: dataUrl
     });
 
   } catch (error) {
