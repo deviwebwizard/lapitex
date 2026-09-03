@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { items, paymentMethod } = await req.json();
+    const { items } = await req.json();
 
     if (!items || !items.length) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         userId,
         total: calculatedTotal,
         status: "PENDING",
-        paymentMethod: paymentMethod === 'RAZORPAY' ? 'RAZORPAY' : 'COD',
+        paymentMethod: 'COD',
         paymentStatus: "PENDING",
         orderItems: {
           create: orderItemsData

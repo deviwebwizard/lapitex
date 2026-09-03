@@ -2,22 +2,16 @@
 
 import { useCartStore } from "@/store/cartStore";
 import Link from "next/link";
-import { Trash2, ArrowRight, ShoppingBag, Truck, CreditCard } from "lucide-react";
+import { Trash2, ArrowRight, ShoppingBag, Truck, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, clearCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [shippingFee, setShippingFee] = useState<number>(0);
-  const [paymentMethod, setPaymentMethod] = useState<'COD' | 'RAZORPAY'>('COD');
-  
-  
-  // Script loaded state for Razorpay
-  const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -63,93 +57,20 @@ export default function CartPage() {
 
     setIsCheckingOut(true);
 
-    if (paymentMethod === 'COD') {
-      try {
-        const response = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items, paymentMethod: 'COD' })
-        });
-
-        if (!response.ok) throw new Error("Failed to checkout");
-        
-        alert("Order placed successfully via Cash on Delivery!");
-        clearCart();
-        router.push("/account");
-      } catch (error) {
-        alert("Something went wrong. Please try again.");
-      } finally {
-        setIsCheckingOut(false);
-      }
-    } else {
-      // Razorpay Flow
-      try {
-        const response = await fetch('/api/checkout/razorpay/create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) throw new Error(data.error || "Failed to create order");
-        
-        if (!isRazorpayLoaded) {
-          throw new Error("Razorpay SDK failed to load. Are you online?");
-        }
-
-        const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
-          amount: data.amount,
-          currency: data.currency,
-          name: "Lapitex",
-          description: "Test Transaction",
-          order_id: data.orderId,
-          handler: function (response: any) {
-            handleRazorpaySuccess(response);
-          },
-          prefill: {
-            name: session?.user?.name || "",
-            email: session?.user?.email || "",
-          },
-          theme: {
-            color: "#e1467c"
-          }
-        };
-
-        const rzp1 = new (window as any).Razorpay(options);
-        rzp1.on('payment.failed', function (response: any){
-          alert("Payment Failed: " + response.error.description);
-        });
-        rzp1.open();
-      } catch (error: any) {
-        alert(error.message || "Something went wrong creating the payment. Please try again.");
-      } finally {
-        setIsCheckingOut(false);
-      }
-    }
-  };
-
-  const handleRazorpaySuccess = async (paymentDetails: any) => {
-    setIsCheckingOut(true);
-    
     try {
-      const response = await fetch('/api/checkout/razorpay/verify', {
+      const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...paymentDetails,
-          items
-        })
+        body: JSON.stringify({ items, paymentMethod: 'COD' })
       });
 
-      if (!response.ok) throw new Error("Failed to verify payment");
+      if (!response.ok) throw new Error("Failed to checkout");
       
-      alert("Payment successful! Order placed.");
+      alert("Order placed successfully via Cash on Delivery!");
       clearCart();
       router.push("/account");
     } catch (error) {
-      alert("Payment verification failed. Please contact support if money was deducted.");
+      alert("Something went wrong. Please try again.");
     } finally {
       setIsCheckingOut(false);
     }
@@ -240,44 +161,24 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Payment Methods */}
+            {/* Order method */}
             <div className="mb-8">
-              <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Payment Method</h3>
-              <div className="space-y-3">
-                <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'RAZORPAY' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <input 
-                    type="radio" 
-                    name="paymentMethod" 
-                    className="w-4 h-4 text-primary" 
-                    checked={paymentMethod === 'RAZORPAY'}
-                    onChange={() => setPaymentMethod('RAZORPAY')}
-                  />
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-gray-500" />
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">Pay Online</p>
-                      <p className="text-xs text-gray-500">Cards, UPI, Netbanking (Razorpay)</p>
-                    </div>
-                  </div>
-                </label>
-
-                <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'COD' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <input 
-                    type="radio" 
-                    name="paymentMethod" 
-                    className="w-4 h-4 text-primary" 
-                    checked={paymentMethod === 'COD'}
-                    onChange={() => setPaymentMethod('COD')}
-                  />
-                  <div className="flex items-center gap-2">
-                    <Truck className="w-5 h-5 text-gray-500" />
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">Cash on Delivery</p>
-                      <p className="text-xs text-gray-500">Pay when your order arrives</p>
-                    </div>
-                  </div>
-                </label>
+              <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Order Method</h3>
+              <div className="flex items-center gap-3 p-3 rounded-xl border-2 border-primary bg-primary/5">
+                <Truck className="w-5 h-5 text-gray-500" />
+                <div>
+                  <p className="font-bold text-gray-900 text-sm">Cash on Delivery</p>
+                  <p className="text-xs text-gray-500">Pay when your order arrives</p>
+                </div>
               </div>
+              <a
+                href="https://wa.me/918809975386?text=Hello%20Lapitex%2C%20I%20would%20like%20to%20discuss%20my%20cart%20items."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 border-2 border-[#25D366] text-[#168f43] hover:bg-[#25D366]/10 transition-all"
+              >
+                <MessageCircle className="h-5 w-5" /> Discuss on WhatsApp
+              </a>
             </div>
             
             <button
@@ -292,18 +193,12 @@ export default function CartPage() {
               )}
             </button>
             <p className="text-xs text-gray-500 text-center mt-4">
-              {paymentMethod === 'RAZORPAY' 
-                ? "You will be redirected to a secure payment gateway." 
-                : "Complete your order now and pay later."}
+              "Complete your order now and pay on delivery."
             </p>
           </div>
         </div>
       </div>
 
-      <Script 
-        src="https://checkout.razorpay.com/v1/checkout.js" 
-        onLoad={() => setIsRazorpayLoaded(true)}
-      />
     </div>
   );
 }
