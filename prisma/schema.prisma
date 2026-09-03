@@ -18,6 +18,7 @@ model User {
   orders     Order[]
   cartItems  CartItem[]
   views      ProductView[]
+  adminSessions AdminSession[]
   lastOnline DateTime    @default(now())
 }
 
@@ -112,6 +113,21 @@ model AuthRateLimit {
   totalWindowStartedAt  DateTime @default(now())
   blockedUntil          DateTime?
   updatedAt             DateTime @updatedAt
+}
+
+model AdminSession {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceKey  String
+  userAgent  String?
+  loginAt    DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  logoutAt   DateTime?
+
+  @@index([userId, loginAt])
+  @@index([userId, deviceKey])
+  @@index([lastSeenAt])
 }
 
 model Category {

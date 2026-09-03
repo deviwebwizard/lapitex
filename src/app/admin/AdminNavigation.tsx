@@ -5,11 +5,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useCartStore } from "@/store/cartStore";
-import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart, ListTree } from "lucide-react";
+import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart, ListTree, Monitor } from "lucide-react";
+import { ADMIN_SESSION_STORAGE_KEY } from "@/components/AdminSessionTracker";
 
 export function AdminNavigation({ user }: { user: { name?: string | null; email?: string | null } }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+
+  const handleSignOut = async () => {
+    const sessionId = window.localStorage.getItem(ADMIN_SESSION_STORAGE_KEY);
+    if (sessionId) {
+      await fetch("/api/admin/sessions", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      }).catch(() => undefined);
+      window.localStorage.removeItem(ADMIN_SESSION_STORAGE_KEY);
+    }
+    useCartStore.getState().clearCart();
+    await signOut({ callbackUrl: '/' });
+  };
 
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -18,6 +33,7 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
     { label: "Categories", href: "/admin/categories", icon: ListTree },
     { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
     { label: "Site Settings", href: "/admin/settings", icon: Settings },
+    { label: "Devices", href: "/admin/devices", icon: Monitor },
   ];
 
   const isActive = (href: string) => {
@@ -103,7 +119,7 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
           {/* User Info & Back to Site */}
           <div className="pt-6 border-t border-white/10 space-y-4">
             <button 
-              onClick={() => { useCartStore.getState().clearCart(); signOut({ callbackUrl: '/' })}}
+              onClick={handleSignOut}
               className="w-full flex items-center justify-center py-2.5 bg-[#e1467c]/10 hover:bg-[#e1467c]/20 text-[#f472a8] font-bold text-xs rounded-xl transition-all border border-[#e1467c]/20"
             >
               <LogOut className="w-3.5 h-3.5 mr-2" /> Sign Out
@@ -178,7 +194,7 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
         {/* User Info */}
         <div className="p-4 mt-2">
           <button 
-            onClick={() => { useCartStore.getState().clearCart(); signOut({ callbackUrl: '/' })}}
+            onClick={handleSignOut}
             className="w-full flex items-center justify-center py-2 mb-3 bg-[#e1467c]/10 hover:bg-[#e1467c]/20 text-[#f472a8] font-bold text-xs rounded-xl transition-all border border-[#e1467c]/20"
           >
             <LogOut className="w-3.5 h-3.5 mr-2" /> Sign Out
