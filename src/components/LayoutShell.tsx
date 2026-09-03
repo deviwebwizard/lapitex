@@ -68,11 +68,11 @@ export function LayoutShell({
             </h3>
             <p className="text-sm text-white/40 mb-3">Lapitex IT Solutions</p>
             <div className="space-y-1.5 mb-4 text-sm">
-              <a href="tel:+916200144824" className="flex items-center gap-2 text-white/50 hover:text-[#f472a8] transition-colors">
-                <Phone className="w-4 h-4" /> +91 6200144824
-              </a>
               <a href="https://wa.me/918809975386" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors">
                 <MessageCircle className="w-4 h-4" /> WhatsApp: +91 8809975386
+              </a>
+              <a href="tel:+916200144824" className="flex items-center gap-2 text-white/50 hover:text-[#f472a8] transition-colors">
+                <Phone className="w-4 h-4" /> Support number: +91 6200144824
               </a>
             </div>
             <div className="flex items-center gap-3">

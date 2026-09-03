@@ -122,7 +122,7 @@ export default async function Home() {
             <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800" alt="Refurbished Business Laptops" className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center p-6">
               <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">Second hand Laptops</h3>
+                <h3 className="text-xl font-bold mb-2">Refurbished Laptops</h3>
                 <p className="text-gray-200 mb-4 text-sm">Up to 40% Off on Dell, HP & Lenovo</p>
                 <span className="bg-primary px-4 py-2 rounded-md font-bold text-sm">Shop Now</span>
               </div>
