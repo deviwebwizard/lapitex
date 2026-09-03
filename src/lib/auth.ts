@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
-import { verifyPassword } from "@/lib/password";
+import { hashPassword, verifyPassword } from "@/lib/password";
 
 // IMPORTANT: Do NOT use PrismaAdapter with CredentialsProvider.
 // PrismaAdapter expects OAuth/email providers that create database sessions.
@@ -21,13 +21,28 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        const email = String(credentials.email).trim().toLowerCase();
+        const password = String(credentials.password);
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { email }
         });
 
-        if (!user || !(await verifyPassword(credentials.password, user.password))) {
+        if (!user) {
           return null;
         }
+
+        let passwordMatches = await verifyPassword(password, user.password);
+
+        // Migrate old plaintext records the first time they log in.
+        if (!passwordMatches && !user.password.startsWith("scrypt$") && user.password === password) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { password: await hashPassword(password) },
+          });
+          passwordMatches = true;
+        }
+
+        if (!passwordMatches) return null;
 
         // Return the user object — this becomes the `user` param in the jwt callback
         return {
