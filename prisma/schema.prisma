@@ -35,6 +35,13 @@ model Product {
   imageUrl      String?
   imageUrls     String? // JSON array of up to five gallery image URLs
   discountBadge String?
+  specifications String? // JSON array of { key, value }
+  warrantyMonths Int?
+  warrantyDetails String?
+  supportDetails String?
+  reviews       String?
+  deliveryFee   Float?
+  deliveryDays  String?
   isFeatured    Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt

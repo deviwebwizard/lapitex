@@ -16,15 +16,30 @@ export default async function ProductPage({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = await params;
-  const product = await prisma.product.findUnique({
-    where: { id: resolvedParams.id },
-  });
+  const [product, shippingSetting] = await Promise.all([
+    prisma.product.findUnique({ where: { id: resolvedParams.id } }),
+    prisma.siteSetting.findUnique({ where: { key: "SHIPPING_FEE" } }),
+  ]);
 
   if (!product) {
     notFound();
   }
 
-  const specifications = parseSpecs(product.name, product.description, product.category);
+  let specifications = parseSpecs(product.name, product.description, product.category);
+  if (product.specifications) {
+    try {
+      const parsed = JSON.parse(product.specifications);
+      if (Array.isArray(parsed)) specifications = parsed;
+    } catch {
+      specifications = product.specifications.split("\n").filter(Boolean).map((line) => {
+        const [key, ...values] = line.split(":");
+        return { key: key.trim(), value: values.join(":").trim() };
+      });
+    }
+  }
+  const siteShippingFee = shippingSetting ? Number(shippingSetting.value) || 0 : 0;
+  const deliveryFee = product.deliveryFee ?? siteShippingFee;
+  const deliveryText = deliveryFee > 0 ? `Delivery fee of ₹${deliveryFee.toLocaleString()} across India within` : "Free delivery across India within";
 
   return (
     <div className="bg-gray-50/50 min-h-screen pb-24 md:pb-12">
@@ -100,7 +115,7 @@ export default async function ProductPage({
               <div className="space-y-4 mb-8 bg-gray-50 rounded-2xl p-6 border border-gray-100">
                 <div className="flex items-center text-sm text-gray-700">
                   <Truck className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
-                  <span>Free delivery across India within <strong>3-5 business days</strong>.</span>
+                  <span>{deliveryText} <strong>{product.deliveryDays || "3-5 business days"}</strong>.</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <ShieldCheck className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
@@ -127,6 +142,10 @@ export default async function ProductPage({
           description={product.description} 
           specifications={specifications} 
           condition={product.condition} 
+          warrantyMonths={product.warrantyMonths}
+          warrantyDetails={product.warrantyDetails}
+          supportDetails={product.supportDetails}
+          reviews={product.reviews}
         />
         
       </div>

@@ -53,6 +53,13 @@ export async function POST(req: NextRequest) {
         imageUrls: Array.isArray(imageUrls) ? JSON.stringify(imageUrls.slice(0, 5).filter((url): url is string => typeof url === "string" && url.trim().length > 0)) : null,
         discountBadge: discountBadge || null,
         isFeatured: Boolean(isFeatured),
+        specifications: typeof body.specifications === "string" ? body.specifications : null,
+        warrantyMonths: body.warrantyMonths === "" || body.warrantyMonths == null ? null : parseInt(body.warrantyMonths, 10),
+        warrantyDetails: body.warrantyDetails || null,
+        supportDetails: body.supportDetails || null,
+        reviews: body.reviews || null,
+        deliveryFee: body.deliveryFee === "" || body.deliveryFee == null ? null : parseFloat(body.deliveryFee),
+        deliveryDays: body.deliveryDays || null,
       },
     });
 

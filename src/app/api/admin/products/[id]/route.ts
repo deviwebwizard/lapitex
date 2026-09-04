@@ -26,6 +26,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         imageUrls: Array.isArray(body.imageUrls) ? JSON.stringify(body.imageUrls.slice(0, 5).filter((url: unknown): url is string => typeof url === "string" && url.trim().length > 0)) : null,
         discountBadge: body.discountBadge || null,
         isFeatured: body.isFeatured
+        ,specifications: typeof body.specifications === "string" ? body.specifications : null
+        ,warrantyMonths: body.warrantyMonths === "" || body.warrantyMonths == null ? null : parseInt(body.warrantyMonths, 10)
+        ,warrantyDetails: body.warrantyDetails || null
+        ,supportDetails: body.supportDetails || null
+        ,reviews: body.reviews || null
+        ,deliveryFee: body.deliveryFee === "" || body.deliveryFee == null ? null : parseFloat(body.deliveryFee)
+        ,deliveryDays: body.deliveryDays || null
       }
     });
 

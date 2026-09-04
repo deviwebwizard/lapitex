@@ -179,7 +179,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
       {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filteredProducts.map((product) => (
-          <div key={product.id} className="clay-card p-5 group">
+          <div key={product.id} onClick={() => router.push(`/admin/products/${product.id}`)} className="clay-card p-5 group cursor-pointer hover:-translate-y-1 transition-transform">
             <div className="flex items-start gap-4">
               {/* Image */}
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-50 to-white border border-pink-100/40 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-sm">
@@ -223,10 +223,10 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
             
             {/* Actions */}
             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-pink-100/30">
-              <button onClick={() => openModal(product)} className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold text-[#e1467c] bg-pink-50/60 hover:bg-pink-100/60 rounded-xl transition-all">
+              <button onClick={(event) => { event.stopPropagation(); openModal(product); }} className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold text-[#e1467c] bg-pink-50/60 hover:bg-pink-100/60 rounded-xl transition-all">
                 <Edit2 className="w-3.5 h-3.5" /> Edit
               </button>
-              <button onClick={() => handleDelete(product.id)} className="flex items-center justify-center p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">
+              <button onClick={(event) => { event.stopPropagation(); handleDelete(product.id); }} className="flex items-center justify-center p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>

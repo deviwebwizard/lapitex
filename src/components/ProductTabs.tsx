@@ -8,9 +8,13 @@ interface ProductTabsProps {
   description: string;
   specifications: Specification[];
   condition: string;
+  warrantyMonths?: number | null;
+  warrantyDetails?: string | null;
+  supportDetails?: string | null;
+  reviews?: string | null;
 }
 
-export function ProductTabs({ description, specifications, condition }: ProductTabsProps) {
+export function ProductTabs({ description, specifications, condition, warrantyMonths, warrantyDetails, supportDetails, reviews }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'specs' | 'warranty' | 'reviews'>('overview');
 
   const tabs = [
@@ -89,9 +93,8 @@ export function ProductTabs({ description, specifications, condition }: ProductT
             
             <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6">
               <h4 className="font-bold text-blue-900 text-lg mb-2">Standard Warranty</h4>
-              <p className="text-blue-800 text-sm md:text-base leading-relaxed">
-                This {condition === 'Used' ? 'In-built' : condition} product comes with a <strong>{condition === 'New' ? '1 Year' : '6 Months'}</strong> standard warranty. 
-                Our warranty covers any hardware defects that may occur during normal usage.
+              <p className="text-blue-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                This {condition === 'Used' ? 'In-built' : condition} product comes with a <strong>{warrantyMonths ? `${warrantyMonths} Months` : condition === 'New' ? '1 Year' : '6 Months'}</strong> standard warranty. {warrantyDetails || 'Our warranty covers any hardware defects that may occur during normal usage.'}
               </p>
             </div>
 
@@ -108,7 +111,7 @@ export function ProductTabs({ description, specifications, condition }: ProductT
             <div>
               <h4 className="font-bold text-gray-900 mb-3">Support Channels</h4>
               <p className="text-gray-600 text-sm md:text-base">
-                For warranty claims or technical support, please contact us at <strong>support@lapitex.com</strong> or call us at <strong>+91 6200144824</strong>.
+                {supportDetails || <>For warranty claims or technical support, please contact us at <strong>support@lapitex.com</strong> or call us at <strong>+91 6200144824</strong>.</>}
               </p>
             </div>
           </div>
@@ -132,6 +135,7 @@ export function ProductTabs({ description, specifications, condition }: ProductT
             </div>
 
             <div className="space-y-6">
+              {reviews && <div className="rounded-2xl bg-pink-50 p-5 text-gray-600 whitespace-pre-wrap">{reviews}</div>}
               {/* Mock Review 1 */}
               <div className="border-b border-gray-100 pb-6">
                 <div className="flex items-center justify-between mb-2">
