@@ -2,25 +2,78 @@
 
 import { useState, useEffect } from "react";
 import { Cookie, X } from "lucide-react";
+import {
+  COOKIE_CONSENT_COOKIE,
+  getCookieConsent,
+  isCookieConsent,
+  setClientCookieConsent,
+} from "@/lib/cookieConsent";
+import type { CookieConsent } from "@/lib/cookieConsent";
 
 export default function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("cookieConsent");
-    if (!consent) {
-      setIsVisible(true);
+    const consent = getCookieConsent();
+    if (consent) {
+      return;
     }
+
+    // Migrate the old localStorage preference once so returning visitors are
+    // not asked again immediately after this release.
+    try {
+      const legacyConsent = window.localStorage.getItem("cookieConsent");
+      if (isCookieConsent(legacyConsent)) {
+        setClientCookieConsent(legacyConsent);
+        void fetch("/api/cookie-consent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: legacyConsent }),
+          cache: "no-store",
+        }).catch(() => undefined);
+        window.localStorage.removeItem("cookieConsent");
+        return;
+      }
+    } catch {
+      // Storage can be unavailable in privacy-restricted browser contexts.
+    }
+
+    // Consent is read from browser storage after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsVisible(true);
   }, []);
 
-  const handleConsent = (status: "allow" | "deny") => {
-    localStorage.setItem("cookieConsent", status);
+  useEffect(() => {
+    const refreshConsentCookie = () => {
+      const consent = getCookieConsent();
+      if (!consent) {
+        setIsVisible(true);
+        return;
+      }
+
+      // Reset Max-Age from the last real interaction. The preference cookie
+      // therefore expires one hour after the user becomes inactive.
+      setClientCookieConsent(consent);
+    };
+
+    const activityEvents = ["pointerdown", "keydown", "scroll", "touchstart", "focus"] as const;
+    activityEvents.forEach((eventName) => window.addEventListener(eventName, refreshConsentCookie, { passive: true }));
+
+    return () => {
+      activityEvents.forEach((eventName) => window.removeEventListener(eventName, refreshConsentCookie));
+    };
+  }, []);
+
+  const handleConsent = (status: CookieConsent) => {
+    setClientCookieConsent(status);
+    void fetch("/api/cookie-consent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+      cache: "no-store",
+    }).catch(() => undefined);
     setIsVisible(false);
-    if (status === "deny") {
-      console.log("Cookies denied");
-    } else {
-      console.log("Cookies allowed");
-    }
+    window.dispatchEvent(new CustomEvent(`${COOKIE_CONSENT_COOKIE}-changed`, { detail: status }));
   };
 
   if (!isVisible) return null;
@@ -38,7 +91,7 @@ export default function CookieBanner() {
             </h3>
             <p className="text-sm text-[#4a1a2e]/60 font-medium">
               We use cookies to enhance your browsing experience and keep you securely logged in. 
-              By clicking "Allow", you consent to our use of cookies.
+              By clicking &quot;Allow&quot;, you consent to our use of cookies.
             </p>
           </div>
         </div>
