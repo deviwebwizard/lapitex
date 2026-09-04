@@ -80,26 +80,26 @@ export default async function Home() {
       <section className="py-10 bg-white border-b border-border shadow-sm relative z-10 -mt-6 mx-4 sm:mx-6 lg:mx-8 rounded-xl px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-center text-xl font-bold text-gray-800 mb-6 uppercase tracking-widest">Shop by Category</h2>
-          <div className="grid grid-cols-2 gap-y-4 md:flex md:flex-wrap md:justify-center md:gap-4 max-w-4xl mx-auto">
-            <Link href="/shop?category=Laptops" className="w-full md:w-48 flex flex-col items-center group text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-6 md:gap-4 max-w-4xl mx-auto">
+            <Link href="/shop?category=Laptops" className="w-full flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Laptop className="h-8 w-8" />
               </div>
               <span className="font-semibold text-gray-700 group-hover:text-primary">Laptops</span>
             </Link>
-            <Link href="/shop?category=Desktops" className="w-full md:w-48 flex flex-col items-center group text-center">
+            <Link href="/shop?category=Desktops" className="w-full flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Monitor className="h-8 w-8" />
               </div>
               <span className="font-semibold text-gray-700 group-hover:text-primary">Desktops</span>
             </Link>
-            <Link href="/shop?category=Parts" className="w-full md:w-48 flex flex-col items-center group text-center">
+            <Link href="/shop?category=Parts" className="w-full flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Cpu className="h-8 w-8" />
               </div>
               <span className="font-semibold text-gray-700 group-hover:text-primary">Accessories &amp; Parts</span>
             </Link>
-            <Link href="/store" className="w-full md:w-48 flex flex-col items-center group text-center">
+            <Link href="/store" className="w-full flex flex-col items-center group text-center">
               <div className="h-16 w-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                 <Wrench className="h-8 w-8" />
               </div>
