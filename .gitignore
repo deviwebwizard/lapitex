@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/.agents/
+/.windsurf/
 /.pnp
 .pnp.*
 .yarn/*
@@ -19,6 +21,9 @@
 
 # production
 /build
+
+# Local security and build tooling artifacts
+/.security-reports/
 
 # misc
 .DS_Store

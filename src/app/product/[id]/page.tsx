@@ -139,7 +139,7 @@ export default async function ProductPage({
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <ShieldCheck className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
-                  <span>Secure Checkout with SSL Encryption.</span>
+                  <span>Secure checkout with encrypted payment processing.</span>
                 </div>
               </div>
 
