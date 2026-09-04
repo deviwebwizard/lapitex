@@ -5,28 +5,32 @@ import { useCartStore } from "@/store/cartStore";
 import Link from "next/link";
 import { ArrowLeft, ShoppingCart, Trash2, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { parseSpecs } from "@/lib/parseSpecs";
 
 type Specification = { key: string; value: string };
 
-function parseSpecifications(product: { technicalSpecifications?: string | null; specifications?: string | null }): Specification[] {
+function parseSpecifications(product: { name: string; description: string; category: string; technicalSpecifications?: string | null; specifications?: string | null }): Specification[] {
   const source = product.technicalSpecifications || product.specifications;
-  if (!source) return [];
+  const generated = () => parseSpecs(product.name, product.description, product.category);
+  if (!source) return generated();
 
   try {
     const parsed = JSON.parse(source);
     if (Array.isArray(parsed)) {
-      return parsed.filter((item): item is Specification =>
+      const specifications = parsed.filter((item): item is Specification =>
         item && typeof item.key === "string" && typeof item.value === "string" && item.key.trim().length > 0
       );
+      return specifications.length ? specifications : generated();
     }
   } catch {
     // Legacy specification text is handled below.
   }
 
-  return source.split("\n").map((line) => {
+  const legacySpecifications = source.split("\n").map((line) => {
     const [key, ...rest] = line.split(":");
     return { key: key.trim(), value: rest.join(":").trim() };
   }).filter((item) => item.key && item.value);
+  return legacySpecifications.length ? legacySpecifications : generated();
 }
 
 export default function ComparePage() {
@@ -67,7 +71,7 @@ export default function ComparePage() {
 
   const specificationsByProduct = items.map(parseSpecifications);
   const specificationKeys = Array.from(new Set(
-    specificationsByProduct.flatMap((specifications) => specifications.map((specification) => specification.key))
+    specificationsByProduct.flatMap((specifications) => specifications.map((specification) => specification.key).filter((key) => key.toLowerCase() !== "condition"))
   ));
   const hasNonTechnicalSpecifications = items.some((product) => product.showNonTechnicalSpecifications !== false && product.nonTechnicalSpecifications?.trim());
 
