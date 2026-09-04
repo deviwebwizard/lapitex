@@ -17,7 +17,15 @@ export default async function ProductPage({
 }) {
   const resolvedParams = await params;
   const [product, shippingSetting] = await Promise.all([
-    prisma.product.findUnique({ where: { id: resolvedParams.id } }),
+    prisma.product.findUnique({
+      where: { id: resolvedParams.id },
+      include: {
+        customerReviews: {
+          orderBy: [{ isTopReview: "desc" }, { createdAt: "desc" }],
+          include: { user: { select: { name: true } } },
+        },
+      },
+    }),
     prisma.siteSetting.findUnique({ where: { key: "SHIPPING_FEE" } }),
   ]);
 
@@ -36,6 +44,18 @@ export default async function ProductPage({
         return { key: key.trim(), value: values.join(":").trim() };
       });
     }
+  }
+  let technicalSpecifications = specifications;
+  if (product.technicalSpecifications) {
+    try {
+      const parsed = JSON.parse(product.technicalSpecifications);
+      if (Array.isArray(parsed)) technicalSpecifications = parsed;
+    } catch { /* keep the generated/legacy specifications */ }
+  }
+  let coveredItems: string[] = [];
+  if (product.coveredItems) {
+    try { const parsed = JSON.parse(product.coveredItems); if (Array.isArray(parsed)) coveredItems = parsed.filter((item): item is string => typeof item === "string"); }
+    catch { coveredItems = product.coveredItems.split("\n").filter(Boolean); }
   }
   const siteShippingFee = shippingSetting ? Number(shippingSetting.value) || 0 : 0;
   const deliveryFee = product.deliveryFee ?? siteShippingFee;
@@ -74,7 +94,7 @@ export default async function ProductPage({
                 </div>
                 <div className="flex items-center justify-center space-x-2 text-xs md:text-sm font-semibold text-blue-600 bg-blue-50 py-3 rounded-xl border border-blue-100">
                   <ShieldCheck className="w-4 h-4" />
-                  <span>{product.condition === 'New' ? '1 Year' : '6 Months'} Warranty</span>
+                  <span>{product.warrantyMonths ? `${product.warrantyMonths} Months` : product.condition === 'New' ? '1 Year' : '6 Months'} Warranty</span>
                 </div>
               </div>
             </div>
@@ -141,11 +161,21 @@ export default async function ProductPage({
         <ProductTabs 
           description={product.description} 
           specifications={specifications} 
+          technicalSpecifications={technicalSpecifications}
+          nonTechnicalSpecifications={product.nonTechnicalSpecifications}
+          showTechnicalSpecifications={product.showTechnicalSpecifications}
+          showNonTechnicalSpecifications={product.showNonTechnicalSpecifications}
           condition={product.condition} 
           warrantyMonths={product.warrantyMonths}
           warrantyDetails={product.warrantyDetails}
+          coveredItems={coveredItems}
           supportDetails={product.supportDetails}
           reviews={product.reviews}
+          qualityTitle={product.overviewQualityTitle}
+          qualityText={product.overviewQualityText}
+          replacementTitle={product.overviewReplacementTitle}
+          replacementText={product.overviewReplacementText}
+          customerReviews={product.customerReviews.map(review => ({ ...review, createdAt: review.createdAt.toISOString() }))}
         />
         
       </div>

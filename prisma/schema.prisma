@@ -19,6 +19,7 @@ model User {
   cartItems  CartItem[]
   views      ProductView[]
   activities UserActivity[]
+  reviews    Review[]
   adminSessions AdminSession[]
   lastOnline DateTime    @default(now())
 }
@@ -36,9 +37,18 @@ model Product {
   imageUrls     String? // JSON array of up to five gallery image URLs
   discountBadge String?
   specifications String? // JSON array of { key, value }
+  technicalSpecifications String? // JSON array of { key, value }
+  nonTechnicalSpecifications String?
+  showTechnicalSpecifications Boolean @default(true)
+  showNonTechnicalSpecifications Boolean @default(true)
   warrantyMonths Int?
   warrantyDetails String?
+  coveredItems String? // JSON array of warranty coverage points
   supportDetails String?
+  overviewQualityTitle String?
+  overviewQualityText String?
+  overviewReplacementTitle String?
+  overviewReplacementText String?
   reviews       String?
   deliveryFee   Float?
   deliveryDays  String?
@@ -48,6 +58,24 @@ model Product {
   orderItems    OrderItem[]
   cartItems     CartItem[]
   views         ProductView[]
+  customerReviews Review[]
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  rating     Int
+  title      String?
+  content    String
+  isTopReview Boolean @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId, rating])
+  @@index([productId, isTopReview])
 }
 
 model Order {

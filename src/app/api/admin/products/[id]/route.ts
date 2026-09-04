@@ -25,14 +25,23 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         imageUrl: body.imageUrl,
         imageUrls: Array.isArray(body.imageUrls) ? JSON.stringify(body.imageUrls.slice(0, 5).filter((url: unknown): url is string => typeof url === "string" && url.trim().length > 0)) : null,
         discountBadge: body.discountBadge || null,
-        isFeatured: body.isFeatured
-        ,specifications: typeof body.specifications === "string" ? body.specifications : null
-        ,warrantyMonths: body.warrantyMonths === "" || body.warrantyMonths == null ? null : parseInt(body.warrantyMonths, 10)
-        ,warrantyDetails: body.warrantyDetails || null
-        ,supportDetails: body.supportDetails || null
-        ,reviews: body.reviews || null
-        ,deliveryFee: body.deliveryFee === "" || body.deliveryFee == null ? null : parseFloat(body.deliveryFee)
-        ,deliveryDays: body.deliveryDays || null
+        isFeatured: body.isFeatured === true,
+        specifications: typeof body.specifications === "string" ? body.specifications : null,
+        technicalSpecifications: typeof body.technicalSpecifications === "string" ? body.technicalSpecifications : null,
+        nonTechnicalSpecifications: body.nonTechnicalSpecifications || null,
+        showTechnicalSpecifications: body.showTechnicalSpecifications !== false,
+        showNonTechnicalSpecifications: body.showNonTechnicalSpecifications !== false,
+        warrantyMonths: body.warrantyMonths === "" || body.warrantyMonths == null ? null : parseInt(body.warrantyMonths, 10),
+        warrantyDetails: body.warrantyDetails || null,
+        coveredItems: typeof body.coveredItems === "string" ? body.coveredItems : null,
+        supportDetails: body.supportDetails || null,
+        overviewQualityTitle: body.overviewQualityTitle || null,
+        overviewQualityText: body.overviewQualityText || null,
+        overviewReplacementTitle: body.overviewReplacementTitle || null,
+        overviewReplacementText: body.overviewReplacementText || null,
+        reviews: body.reviews || null,
+        deliveryFee: body.deliveryFee === "" || body.deliveryFee == null ? null : parseFloat(body.deliveryFee),
+        deliveryDays: body.deliveryDays || null
       }
     });
 
