@@ -9,6 +9,11 @@ export type Product = {
   condition: string;
   imageUrl: string | null;
   imageUrls?: string | null;
+  specifications?: string | null;
+  technicalSpecifications?: string | null;
+  nonTechnicalSpecifications?: string | null;
+  showTechnicalSpecifications?: boolean;
+  showNonTechnicalSpecifications?: boolean;
   discountBadge: string | null;
   isFeatured: boolean;
   createdAt: Date;

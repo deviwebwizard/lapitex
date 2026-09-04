@@ -6,6 +6,29 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingCart, Trash2, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+type Specification = { key: string; value: string };
+
+function parseSpecifications(product: { technicalSpecifications?: string | null; specifications?: string | null }): Specification[] {
+  const source = product.technicalSpecifications || product.specifications;
+  if (!source) return [];
+
+  try {
+    const parsed = JSON.parse(source);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((item): item is Specification =>
+        item && typeof item.key === "string" && typeof item.value === "string" && item.key.trim().length > 0
+      );
+    }
+  } catch {
+    // Legacy specification text is handled below.
+  }
+
+  return source.split("\n").map((line) => {
+    const [key, ...rest] = line.split(":");
+    return { key: key.trim(), value: rest.join(":").trim() };
+  }).filter((item) => item.key && item.value);
+}
+
 export default function ComparePage() {
   const [mounted, setMounted] = useState(false);
   const { items, removeItem, clearCompare } = useCompareStore();
@@ -28,6 +51,12 @@ export default function ComparePage() {
       </div>
     );
   }
+
+  const specificationsByProduct = items.map(parseSpecifications);
+  const specificationKeys = Array.from(new Set(
+    specificationsByProduct.flatMap((specifications) => specifications.map((specification) => specification.key))
+  ));
+  const hasNonTechnicalSpecifications = items.some((product) => product.showNonTechnicalSpecifications !== false && product.nonTechnicalSpecifications?.trim());
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -121,6 +150,41 @@ export default function ComparePage() {
                   <td key={`empty-cond-${i}`} className="p-6 border-b border-gray-100 border-l bg-gray-50/50"></td>
                 ))}
               </tr>
+              {specificationKeys.map((key) => (
+                <tr key={`spec-${key}`}>
+                  <td className="p-6 border-b border-gray-100 font-semibold text-gray-700 bg-gray-50">{key}</td>
+                  {items.map((product, productIndex) => {
+                    const specification = specificationsByProduct[productIndex].find((item) => item.key === key);
+                    return (
+                      <td key={product.id} className="p-6 border-b border-gray-100 border-l align-top">
+                        <span className={specification ? "font-medium text-gray-700" : "text-gray-400"}>
+                          {specification?.value || "—"}
+                        </span>
+                      </td>
+                    );
+                  })}
+                  {Array.from({ length: 3 - items.length }).map((_, i) => (
+                    <td key={`empty-spec-${key}-${i}`} className="p-6 border-b border-gray-100 border-l bg-gray-50/50"></td>
+                  ))}
+                </tr>
+              ))}
+              {hasNonTechnicalSpecifications && (
+                <tr>
+                  <td className="p-6 border-b border-gray-100 font-semibold text-gray-700 bg-gray-50">Additional specifications</td>
+                  {items.map((product) => (
+                    <td key={product.id} className="p-6 border-b border-gray-100 border-l align-top">
+                      {product.showNonTechnicalSpecifications !== false && product.nonTechnicalSpecifications?.trim() ? (
+                        <span className="whitespace-pre-wrap font-medium text-gray-700">{product.nonTechnicalSpecifications}</span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </td>
+                  ))}
+                  {Array.from({ length: 3 - items.length }).map((_, i) => (
+                    <td key={`empty-additional-spec-${i}`} className="p-6 border-b border-gray-100 border-l bg-gray-50/50"></td>
+                  ))}
+                </tr>
+              )}
               <tr>
                 <td className="p-6 border-b border-gray-100 font-semibold text-gray-700 bg-gray-50">Availability</td>
                 {items.map(product => (
