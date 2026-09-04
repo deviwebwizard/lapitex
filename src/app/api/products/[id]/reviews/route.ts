@@ -14,7 +14,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
   if (!user) return NextResponse.json({ eligible: false }, { status: 401 });
   const { id: productId } = await params;
   const purchased = await prisma.orderItem.findFirst({ where: { productId, order: { userId: user.userId, status: "DELIVERED" } }, select: { id: true } });
-  const existing = await prisma.review.findUnique({ where: { productId_userId: { productId, userId: user.userId } }, select: { id: true } });
+  const existing = await prisma.review.findFirst({ where: { productId, userId: user.userId }, select: { id: true } });
   return NextResponse.json({ eligible: Boolean(purchased), alreadyReviewed: Boolean(existing) });
 }
 
