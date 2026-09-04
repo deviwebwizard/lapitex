@@ -1,7 +1,11 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { encode as defaultEncode } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/password";
+
+const CUSTOMER_SESSION_MAX_AGE = 60 * 60;
+const ADMIN_SESSION_MAX_AGE = 12 * 60 * 60;
 
 // IMPORTANT: Do NOT use PrismaAdapter with CredentialsProvider.
 // PrismaAdapter expects OAuth/email providers that create database sessions.
@@ -56,8 +60,23 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60, // One hour of inactivity before the session expires
+    // Use the longest cookie lifetime here; the JWT encoder below applies the
+    // shorter customer lifetime to customer tokens.
+    maxAge: ADMIN_SESSION_MAX_AGE,
     updateAge: 5 * 60, // Extend session every 5 minutes if active
+  },
+  jwt: {
+    // NextAuth's default maxAge is global. Encode each token with the
+    // role-specific lifetime so admin sessions can remain active for 12 hours
+    // while customer sessions still expire after one hour of inactivity.
+    encode: async (params) =>
+      defaultEncode({
+        ...params,
+        maxAge:
+          params.token?.role === "ADMIN"
+            ? ADMIN_SESSION_MAX_AGE
+            : CUSTOMER_SESSION_MAX_AGE,
+      }),
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
