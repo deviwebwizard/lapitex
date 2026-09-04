@@ -8,8 +8,31 @@ const galleryImages = [
   "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=1000",
 ];
 
-export function getProductImages(imageUrl: string | null, productId: string, count: number, imageUrls?: string | null) {
-  const fallback = galleryImages.map((_, index) => galleryImages[(index + productId.length) % galleryImages.length]);
+const categoryImages: Record<string, string[]> = {
+  Laptops: [
+    "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=1000",
+  ],
+  Desktops: [
+    "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&q=80&w=1000",
+  ],
+  Parts: [
+    "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1597849005986-8f3bb6ce1381?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1624434207284-727de9e22312?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&q=80&w=1000",
+  ],
+};
+
+export function getProductImages(imageUrl: string | null, productId: string, count: number, imageUrls?: string | null, category?: string) {
+  const categoryFallback = categoryImages[category || ""] || galleryImages;
+  const fallback = categoryFallback.map((_, index) => categoryFallback[(index + productId.length) % categoryFallback.length]);
   let uploadedImages: string[] = [];
   if (imageUrls) {
     try {

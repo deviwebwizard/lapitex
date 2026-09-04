@@ -145,7 +145,7 @@ export default async function Home() {
                     <div className="h-56 overflow-hidden bg-gray-50 relative flex items-center justify-center border-b border-gray-100/50">
                       <CompareButton product={product} />
                       {product.imageUrl ? (
-                        <FeaturedProductImage images={getProductImages(product.imageUrl, product.id, 2, product.imageUrls)} alt={product.name} />
+                        <FeaturedProductImage images={getProductImages(product.imageUrl, product.id, 2, product.imageUrls, product.category)} alt={product.name} />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400 font-medium">No Image</div>
                       )}
