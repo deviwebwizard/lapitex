@@ -159,6 +159,7 @@ export default async function ProductPage({
 
         {/* Tabs Section */}
         <ProductTabs 
+          productId={product.id}
           description={product.description} 
           specifications={specifications} 
           technicalSpecifications={technicalSpecifications}

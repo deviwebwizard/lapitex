@@ -7,88 +7,89 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  phone     String?
-  password  String
-  role      String   @default("CUSTOMER") // CUSTOMER, ADMIN
-  createdAt DateTime @default(now())
-  updatedAt  DateTime    @updatedAt
-  orders     Order[]
-  cartItems  CartItem[]
-  views      ProductView[]
-  activities UserActivity[]
-  reviews    Review[]
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  phone         String?
+  password      String
+  role          String         @default("CUSTOMER") // CUSTOMER, ADMIN
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  orders        Order[]
+  cartItems     CartItem[]
+  views         ProductView[]
+  activities    UserActivity[]
+  reviews       Review[]
   adminSessions AdminSession[]
-  lastOnline DateTime    @default(now())
+  lastOnline    DateTime       @default(now())
 }
 
 model Product {
-  id            String      @id @default(cuid())
-  name          String
-  description   String
-  price         Float
-  originalPrice Float?
-  stock         Int         @default(0)
-  category      String
-  condition     String      @default("Refurbished") // Refurbished, Used, New
-  imageUrl      String?
-  imageUrls     String? // JSON array of up to five gallery image URLs
-  discountBadge String?
-  specifications String? // JSON array of { key, value }
-  technicalSpecifications String? // JSON array of { key, value }
-  nonTechnicalSpecifications String?
-  showTechnicalSpecifications Boolean @default(true)
-  showNonTechnicalSpecifications Boolean @default(true)
-  warrantyMonths Int?
-  warrantyDetails String?
-  coveredItems String? // JSON array of warranty coverage points
-  supportDetails String?
-  overviewQualityTitle String?
-  overviewQualityText String?
-  overviewReplacementTitle String?
-  overviewReplacementText String?
-  reviews       String?
-  deliveryFee   Float?
-  deliveryDays  String?
-  isFeatured    Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  orderItems    OrderItem[]
-  cartItems     CartItem[]
-  views         ProductView[]
-  customerReviews Review[]
+  id                             String        @id @default(cuid())
+  name                           String
+  description                    String
+  price                          Float
+  originalPrice                  Float?
+  stock                          Int           @default(0)
+  category                       String
+  condition                      String        @default("Refurbished") // Refurbished, Used, New
+  imageUrl                       String?
+  imageUrls                      String? // JSON array of up to five gallery image URLs
+  discountBadge                  String?
+  specifications                 String? // JSON array of { key, value }
+  technicalSpecifications        String? // JSON array of { key, value }
+  nonTechnicalSpecifications     String?
+  showTechnicalSpecifications    Boolean       @default(true)
+  showNonTechnicalSpecifications Boolean       @default(true)
+  warrantyMonths                 Int?
+  warrantyDetails                String?
+  coveredItems                   String? // JSON array of warranty coverage points
+  supportDetails                 String?
+  overviewQualityTitle           String?
+  overviewQualityText            String?
+  overviewReplacementTitle       String?
+  overviewReplacementText        String?
+  reviews                        String?
+  deliveryFee                    Float?
+  deliveryDays                   String?
+  isFeatured                     Boolean       @default(false)
+  createdAt                      DateTime      @default(now())
+  updatedAt                      DateTime      @updatedAt
+  orderItems                     OrderItem[]
+  cartItems                      CartItem[]
+  views                          ProductView[]
+  customerReviews                Review[]
 }
 
 model Review {
-  id         String   @id @default(cuid())
-  productId  String
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  userId     String?
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  rating     Int
-  title      String?
-  content    String
-  isTopReview Boolean @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  rating      Int
+  title       String?
+  content     String
+  isTopReview Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
+  @@unique([productId, userId])
   @@index([productId, rating])
   @@index([productId, isTopReview])
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  userId     String
-  user       User        @relation(fields: [userId], references: [id])
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
   total         Float
   status        String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
   paymentMethod String      @default("COD")
   paymentStatus String      @default("PENDING") // PENDING, PAID, FAILED
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  orderItems OrderItem[]
+  orderItems    OrderItem[]
 }
 
 model OrderItem {
@@ -141,7 +142,7 @@ model UserActivity {
 
 model SiteSetting {
   key       String   @id
-  value     String   // JSON string
+  value     String // JSON string
   updatedAt DateTime @updatedAt
 }
 
@@ -156,23 +157,23 @@ model PasswordResetToken {
 }
 
 model AuthRateLimit {
-  key                   String   @id
-  count                 Int      @default(0)
-  windowStartedAt       DateTime @default(now())
-  totalCount            Int      @default(0)
-  totalWindowStartedAt  DateTime @default(now())
-  blockedUntil          DateTime?
-  updatedAt             DateTime @updatedAt
+  key                  String    @id
+  count                Int       @default(0)
+  windowStartedAt      DateTime  @default(now())
+  totalCount           Int       @default(0)
+  totalWindowStartedAt DateTime  @default(now())
+  blockedUntil         DateTime?
+  updatedAt            DateTime  @updatedAt
 }
 
 model AdminSession {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   deviceKey  String
   userAgent  String?
-  loginAt    DateTime @default(now())
-  lastSeenAt DateTime @default(now())
+  loginAt    DateTime  @default(now())
+  lastSeenAt DateTime  @default(now())
   logoutAt   DateTime?
 
   @@index([userId, loginAt])
