@@ -53,6 +53,14 @@ function parseImageUrls(value: string | null | undefined, fallback: string | nul
   return fallback ? [fallback] : [];
 }
 
+function getEffectiveBadge(product: Pick<Product, "discountBadge" | "price" | "originalPrice">) {
+  if (product.discountBadge) return product.discountBadge;
+  if (product.originalPrice && product.originalPrice > product.price) {
+    return `${Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF`;
+  }
+  return "";
+}
+
 export default function ProductsClient({ initialProducts }: { initialProducts: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [search, setSearch] = useState("");
@@ -78,7 +86,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
         name: product.name, description: product.description,
         price: product.price.toString(), originalPrice: product.originalPrice ? product.originalPrice.toString() : "",
         stock: product.stock.toString(), category: product.category,
-        condition: product.condition, imageUrls: [...parseImageUrls(product.imageUrls, product.imageUrl), "", "", "", "", ""].slice(0, 5), discountBadge: product.discountBadge || "", isFeatured: product.isFeatured,
+        condition: product.condition, imageUrls: [...parseImageUrls(product.imageUrls, product.imageUrl), "", "", "", "", ""].slice(0, 5), discountBadge: getEffectiveBadge(product), isFeatured: product.isFeatured,
       });
     } else {
       setEditingProduct(null);
