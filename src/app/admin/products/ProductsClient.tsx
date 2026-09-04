@@ -69,6 +69,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
   });
 
   const filteredProducts = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+  const imageSlots = [...formData.imageUrls, "", "", "", "", ""].slice(0, 5);
 
   const openModal = (product: Product | null = null) => {
     if (product) {
@@ -306,11 +307,11 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
               {/* Five-image product gallery */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Product Gallery (up to 5 images)</label>
+                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Product Gallery (5 image slots)</label>
                   <span className="text-[10px] text-[#4a1a2e]/40">First 2 appear in listings</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {formData.imageUrls.map((image, index) => (
+                  {imageSlots.map((image, index) => (
                     <div key={index} className="space-y-2 rounded-2xl border border-pink-100/40 bg-pink-50/20 p-3">
                       <p className="text-[10px] font-black uppercase tracking-widest text-[#4a1a2e]/50">Image {index + 1}</p>
                       <input value={image} onChange={e => { const imageUrls = [...formData.imageUrls]; imageUrls[index] = e.target.value; setFormData({ ...formData, imageUrls }); }} placeholder="Image URL or upload" className="w-full px-3 py-2.5 bg-white/70 border border-pink-100/40 rounded-xl text-xs font-medium text-[#2d1a26] placeholder-[#4a1a2e]/20" />
