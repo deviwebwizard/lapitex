@@ -24,6 +24,7 @@
 
 # Local security and build tooling artifacts
 /.security-reports/
+/public/uploads/*
 
 # misc
 .DS_Store

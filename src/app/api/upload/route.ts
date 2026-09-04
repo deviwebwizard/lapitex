@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { storeOptimizedImage } from "@/lib/imageStorage";
+
+export const runtime = "nodejs";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -16,7 +19,7 @@ function hasValidSignature(buffer: Buffer, type: string): boolean {
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -41,18 +44,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "The uploaded file is not a valid image" }, { status: 400 });
     }
 
-    // Railway instances have ephemeral filesystems. Persist the image content
-    // with the setting/product record instead of returning a local file URL
-    // that disappears after a restart or redeploy.
-    const dataUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
+    const url = await storeOptimizedImage(buffer);
 
     return NextResponse.json({ 
       success: true, 
-      url: dataUrl
+      url,
+      format: "webp",
+      maxDimension: 2000,
     });
 
   } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Upload failed";
+    console.error("Upload error:", message);
+    const storageNotConfigured = message.startsWith("Image storage is not configured");
+    return NextResponse.json(
+      { error: storageNotConfigured ? "Image storage is not configured on the server" : "Upload failed" },
+      { status: storageNotConfigured ? 503 : 500 },
+    );
   }
 }
