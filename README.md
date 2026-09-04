@@ -20,7 +20,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Admin-uploaded images are validated, auto-rotated, resized to a maximum 2000px dimension, and converted to lossy WebP at quality 84 before storage. Only the resulting image URL/path is saved in the database.
 
-For production on Railway, configure a Cloudinary unsigned image upload preset using `CLOUDINARY_CLOUD_NAME` and `CLOUDINARY_UPLOAD_PRESET` (see `.env.example`). Configure that preset to allow only WebP images, cap uploads at 5 MB, and use a `lapitex` asset folder. Local development falls back to optimized files in `public/uploads`; production does not use the app filesystem because it is not durable across deployments.
+For production on Railway, configure Cloudinary signed uploads using `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` (see `.env.example`). The server signs each upload with SHA-256, a short-lived timestamp, and a fixed `lapitex` folder; the API secret is never sent to the browser. Configure the Cloudinary account to allow WebP images and cap uploads at 5 MB as an additional provider-side safeguard. Local development falls back to optimized files in `public/uploads`; production does not use the app filesystem because it is not durable across deployments.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

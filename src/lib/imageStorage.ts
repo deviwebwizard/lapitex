@@ -1,6 +1,6 @@
 import "server-only";
 
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
@@ -28,13 +28,27 @@ async function optimizeToWebp(input: Buffer) {
 
 async function uploadToCloudinary(image: Buffer) {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME?.trim();
-  const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET?.trim();
-  if (!cloudName || !uploadPreset) return null;
+  const apiKey = process.env.CLOUDINARY_API_KEY?.trim();
+  const apiSecret = process.env.CLOUDINARY_API_SECRET?.trim();
 
-  const filename = `lapitex-${randomUUID()}.webp`;
+  if (!cloudName || !apiKey || !apiSecret) return null;
+
+  const folder = "lapitex";
+  const publicId = `image-${randomUUID()}`;
+  const timestamp = Math.floor(Date.now() / 1000);
+  const signedParameters = `folder=${folder}&format=webp&public_id=${publicId}&timestamp=${timestamp}`;
+  const signature = createHash("sha256")
+    .update(`${signedParameters}${apiSecret}`)
+    .digest("hex");
+
   const form = new FormData();
-  form.append("file", new Blob([new Uint8Array(image)], { type: "image/webp" }), filename);
-  form.append("upload_preset", uploadPreset);
+  form.append("file", new Blob([new Uint8Array(image)], { type: "image/webp" }), `${publicId}.webp`);
+  form.append("api_key", apiKey);
+  form.append("timestamp", String(timestamp));
+  form.append("signature", signature);
+  form.append("folder", folder);
+  form.append("format", "webp");
+  form.append("public_id", publicId);
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`, {
     method: "POST",
@@ -68,7 +82,7 @@ export async function storeOptimizedImage(input: Buffer) {
   // Local files are useful for development. Production must use durable
   // object storage because Railway application files can disappear on deploy.
   if (process.env.NODE_ENV === "production") {
-    throw new Error("Image storage is not configured. Set CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET.");
+    throw new Error("Image storage is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.");
   }
 
   return writeLocalImage(optimizedImage);
