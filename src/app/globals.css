@@ -65,6 +65,13 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Keep form controls visibly separated from their soft pink surfaces. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+textarea,
+select {
+  border: 1px solid rgba(190, 108, 143, 0.38) !important;
+}
+
 /* ──── Scrollbar styling ──── */
 ::-webkit-scrollbar {
   width: 6px;
