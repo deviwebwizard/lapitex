@@ -5,6 +5,7 @@ import type { Product } from '@/types/product';
 interface CompareState {
   items: Product[];
   addItem: (product: Product) => void;
+  refreshItems: (products: Product[]) => void;
   removeItem: (productId: string) => void;
   clearCompare: () => void;
   isInCompare: (productId: string) => boolean;
@@ -20,6 +21,7 @@ export const useCompareStore = create<CompareState>()(
           set({ items: [...currentItems, product] });
         }
       },
+      refreshItems: (products) => set({ items: products }),
       removeItem: (productId) => {
         set({ items: get().items.filter((item) => item.id !== productId) });
       },

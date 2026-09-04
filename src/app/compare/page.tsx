@@ -31,11 +31,24 @@ function parseSpecifications(product: { technicalSpecifications?: string | null;
 
 export default function ComparePage() {
   const [mounted, setMounted] = useState(false);
-  const { items, removeItem, clearCompare } = useCompareStore();
+  const { items, removeItem, clearCompare, refreshItems } = useCompareStore();
   const addItemToCart = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     setMounted(true);
+    let active = true;
+    void Promise.all(items.map(async (item) => {
+      try {
+        const response = await fetch(`/api/products/${item.id}`);
+        if (!response.ok) return item;
+        return await response.json();
+      } catch {
+        return item;
+      }
+    })).then((products) => {
+      if (active) refreshItems(products);
+    });
+    return () => { active = false; };
   }, []);
 
   if (!mounted) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
