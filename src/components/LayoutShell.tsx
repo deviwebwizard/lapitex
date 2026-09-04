@@ -21,6 +21,7 @@ export function LayoutShell({
   const whatsapp = whatsappUrl(contactInfo.whatsappRedirect);
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const hasStickyBanner = saleBanner?.isStickyActive ?? saleBanner?.isActive;
 
   if (isAdmin) {
     return <main className="flex-grow min-h-screen">{children}</main>;
@@ -30,7 +31,9 @@ export function LayoutShell({
     <>
       <Navbar saleBanner={saleBanner} />
       <UserActivityTracker />
-      <main className="flex-grow pt-20 md:pt-24">{children}</main>
+      <main className={`flex-grow ${hasStickyBanner ? "pt-[6.75rem] md:pt-[9rem]" : "pt-20 md:pt-24"}`}>
+        {children}
+      </main>
       <footer className="bg-[#1a0e16] text-[#4a1a2e]/60 py-14 mt-auto border-t border-[#2d1a26]/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-5 gap-8">
           <div>
