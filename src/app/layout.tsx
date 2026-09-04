@@ -4,6 +4,7 @@ import { Providers } from "@/components/Providers";
 import { LayoutShell } from "@/components/LayoutShell";
 import CookieBanner from "@/components/CookieBanner";
 import prisma from "@/lib/prisma";
+import { mergeContact } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "Lapitex - Premium IT Solutions",
@@ -21,6 +22,7 @@ export default async function RootLayout({
   const bannerSetting = await prisma.siteSetting.findUnique({
     where: { key: "SALE_BANNER" }
   });
+  const contactSetting = await prisma.siteSetting.findUnique({ where: { key: "CONTACT_INFO" } });
   
   let saleBanner = null;
   if (bannerSetting) {
@@ -33,6 +35,7 @@ export default async function RootLayout({
       };
     } catch (e) {}
   }
+  const contactInfo = mergeContact(contactSetting ? JSON.parse(contactSetting.value) : undefined);
 
   return (
     <html
@@ -41,7 +44,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
         <Providers>
-          <LayoutShell saleBanner={saleBanner}>
+          <LayoutShell saleBanner={saleBanner} contactInfo={contactInfo}>
             {children}
           </LayoutShell>
           <CookieBanner />

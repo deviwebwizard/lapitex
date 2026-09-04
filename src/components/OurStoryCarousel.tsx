@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const images = [
+const defaultImages = [
   { src: "/our-story.png", alt: "Lapitex team in the store" },
   { src: "/store-interior.png", alt: "Lapitex store interior" },
   { src: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1000", alt: "IT workspace" },
@@ -10,7 +10,7 @@ const images = [
   { src: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=1000", alt: "Refurbished laptop" },
 ];
 
-export function OurStoryCarousel() {
+export function OurStoryCarousel({ images = defaultImages }: { images?: { src: string; alt: string }[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {

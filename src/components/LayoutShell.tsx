@@ -7,14 +7,18 @@ import { Logo } from "./Logo";
 import Image from "next/image";
 import { Phone, MessageCircle } from "lucide-react";
 import { UserActivityTracker } from "./UserActivityTracker";
+import { ContactInfo, safeUrl, whatsappUrl } from "@/lib/siteContent";
 
 export function LayoutShell({
   saleBanner,
+  contactInfo,
   children,
 }: {
   saleBanner: { isActive: boolean; isStickyActive?: boolean; text?: string; mainText?: string; stickyText?: string } | null;
+  contactInfo: ContactInfo;
   children: ReactNode;
 }) {
+  const whatsapp = whatsappUrl(contactInfo.whatsappRedirect);
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
 
@@ -70,16 +74,16 @@ export function LayoutShell({
             </h3>
             <p className="text-sm text-white/40 mb-3">Lapitex IT Solutions</p>
             <div className="space-y-1.5 mb-4 text-sm">
-              <a href="https://wa.me/918809975386" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors">
-                <MessageCircle className="w-4 h-4" /> WhatsApp: +91 8809975386
+              <a href={whatsappUrl(contactInfo.whatsapp1)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors">
+                <MessageCircle className="w-4 h-4" /> WhatsApp: {contactInfo.whatsapp1}
               </a>
-              <a href="tel:+916200144824" className="flex items-center gap-2 text-white/50 hover:text-[#f472a8] transition-colors">
-                <Phone className="w-4 h-4" /> Support number: +91 6200144824
+              <a href={`tel:${contactInfo.supportContact.replace(/\s/g, "")}`} className="flex items-center gap-2 text-white/50 hover:text-[#f472a8] transition-colors">
+                <Phone className="w-4 h-4" /> Support number: {contactInfo.supportContact}
               </a>
             </div>
             <div className="flex items-center gap-3">
               <a
-                href="https://www.instagram.com/lapitex_it_solutions/"
+                href={safeUrl(contactInfo.instagram, "#")}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Lapitex IT Solutions on Instagram"
@@ -89,8 +93,9 @@ export function LayoutShell({
                   <path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6Zm8.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
                 </svg>
               </a>
+              <a href={safeUrl(contactInfo.facebook, "#")} target="_blank" rel="noopener noreferrer" aria-label="Lapitex IT Solutions on Facebook" className="text-white/50 hover:text-[#f472a8] transition-colors text-sm font-bold">f</a>
               <a
-                href="https://www.youtube.com/channel/UCP-jwgZHGVovyKdYZm4yFIQ"
+                href={safeUrl(contactInfo.youtube, "#")}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Lapitex IT Solutions on YouTube"
@@ -149,7 +154,7 @@ export function LayoutShell({
         </div>
       </footer>
       <a
-        href="https://wa.me/918809975386"
+        href={whatsapp}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with Lapitex on WhatsApp"

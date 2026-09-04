@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useCartStore } from "@/store/cartStore";
-import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart, ListTree, Monitor } from "lucide-react";
+import { LayoutDashboard, Users, Package, Settings, ArrowLeft, Crown, Sparkles, Menu, X, LogOut, ShoppingCart, ListTree, Monitor, BookOpen, Phone } from "lucide-react";
 import { ADMIN_SESSION_STORAGE_KEY } from "@/components/AdminSessionTracker";
 
 export function AdminNavigation({ user }: { user: { name?: string | null; email?: string | null } }) {
@@ -33,6 +33,8 @@ export function AdminNavigation({ user }: { user: { name?: string | null; email?
     { label: "Categories", href: "/admin/categories", icon: ListTree },
     { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
     { label: "Site Settings", href: "/admin/settings", icon: Settings },
+    { label: "Our Story", href: "/admin/our-story", icon: BookOpen },
+    { label: "Contact", href: "/admin/contact", icon: Phone },
     { label: "Devices", href: "/admin/devices", icon: Monitor },
   ];
 
