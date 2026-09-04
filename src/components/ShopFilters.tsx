@@ -23,6 +23,7 @@ export function ShopFilters() {
   const [minPrice, setMinPrice] = useState(currentMin);
   const [maxPrice, setMaxPrice] = useState(currentMax);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(currentCategory || null);
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -81,8 +82,20 @@ export function ShopFilters() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-border sticky top-24">
-      <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-border sticky top-24">
+      <button
+        type="button"
+        onClick={() => setIsMobileExpanded((expanded) => !expanded)}
+        aria-expanded={isMobileExpanded}
+        className="md:hidden flex w-full items-center justify-between border-b border-gray-100 pb-1 text-left"
+      >
+        <h3 className="font-bold text-lg flex items-center text-gray-900">
+          <Filter className="h-5 w-5 mr-2 text-primary" />
+          Filters
+        </h3>
+        <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isMobileExpanded ? 'rotate-180' : ''}`} />
+      </button>
+      <div className="hidden md:flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
         <h3 className="font-bold text-lg flex items-center text-gray-900">
           <Filter className="h-5 w-5 mr-2 text-primary" />
           Filters
@@ -94,7 +107,14 @@ export function ShopFilters() {
         )}
       </div>
       
-      <div className="space-y-8">
+      <div className={`${isMobileExpanded ? 'block' : 'hidden'} md:block space-y-8 pt-5 md:pt-0`}>
+        <div className="md:hidden flex justify-end -mt-2 -mb-2">
+          {(currentCategory || currentSubcategory || currentCondition || currentMin || currentMax) && (
+            <button onClick={clearFilters} className="text-xs font-semibold text-red-500 hover:text-red-700">
+              Clear All
+            </button>
+          )}
+        </div>
         {/* Categories */}
         <div>
           <h4 className="font-bold text-sm mb-4 text-gray-900 uppercase tracking-wider">Categories</h4>
