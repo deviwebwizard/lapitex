@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, Search, Image as ImageIcon, X, Upload, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getProductImages } from "@/lib/productImages";
 
 type Product = {
   id: string;
@@ -182,7 +183,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
             <div className="flex items-start gap-4">
               {/* Image */}
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-50 to-white border border-pink-100/40 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-sm">
-                <SafeImagePreview src={parseImageUrls(product.imageUrls, product.imageUrl)[0] || null} alt={product.name} />
+                <SafeImagePreview src={getProductImages(product.imageUrl, product.id, 1, product.imageUrls, product.category)[0] || null} alt={product.name} />
               </div>
               
               {/* Info */}
@@ -327,7 +328,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                         <input type="file" accept="image/*" onChange={e => handleFileUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                         <div className="w-full px-3 py-2.5 bg-white/70 border-2 border-dashed border-pink-200/60 rounded-xl text-center text-xs font-semibold text-[#e1467c]/60 hover:bg-pink-50/80 transition-all flex items-center justify-center gap-2"><Upload className="w-3.5 h-3.5" /> {uploading ? "Uploading..." : "Upload Image"}</div>
                       </div>
-                      <div className="h-24 rounded-xl overflow-hidden bg-white/60"><SafeImagePreview src={image || null} alt={`Product image ${index + 1}`} /></div>
+                      <div className="h-24 rounded-xl overflow-hidden bg-white/60"><SafeImagePreview src={image || getProductImages(null, editingProduct?.id || "preview", 5, null, formData.category)[index] || null} alt={`Product image ${index + 1}`} /></div>
                     </div>
                   ))}
                 </div>
