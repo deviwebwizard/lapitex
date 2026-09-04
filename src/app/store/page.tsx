@@ -18,8 +18,8 @@ function SocialIcon({ type, className }: { type: "instagram" | "facebook" | "you
 export default async function StorePage() {
   const setting = await prisma.siteSetting.findUnique({ where: { key: "CONTACT_INFO" } });
   const contact = mergeContact(setting ? JSON.parse(setting.value) : undefined);
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.googleMapsAddress)}`;
-  const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(contact.googleMapsAddress)}&output=embed`;
+  const mapsUrl = safeUrl(contact.googleMapsAddress, "https://maps.app.goo.gl/7SVrjsUaYGACSe967");
+  const embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3597.6835178659174!2d85.1326462!3d25.6154388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed5910709fe563%3A0x36a19dc705d1368a!2sLAPITEX%20IT%20SOLUTION!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin";
   return (
     <div className="bg-gray-50/50 min-h-screen pb-24 md:pb-12 pt-16 md:pt-24">
       {/* Hero Section */}
