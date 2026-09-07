@@ -273,7 +273,7 @@ export default function ProductsClient({ initialProducts, categories = [] }: { i
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Category</label>
-                  <select required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value, subcategory: ""})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] appearance-none cursor-pointer">
+                  <select required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value, subcategory: ""})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] cursor-pointer">
                     <option value="" disabled>Select a category</option>
                     {categories.map(c => (
                       <option key={c.id} value={c.name}>{c.name}</option>
@@ -283,13 +283,13 @@ export default function ProductsClient({ initialProducts, categories = [] }: { i
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Subcategory</label>
                   <select 
-                    value={formData.subcategory} 
+                    value={formData.subcategory || ""} 
                     onChange={e => setFormData({...formData, subcategory: e.target.value})} 
-                    className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] appearance-none cursor-pointer disabled:opacity-50"
-                    disabled={!formData.category || (categories.find(c => c.name === formData.category)?.children.length || 0) === 0}
+                    className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] cursor-pointer disabled:opacity-50"
+                    disabled={!formData.category || (categories.find(c => c.name === formData.category)?.children?.length || 0) === 0}
                   >
                     <option value="">None / Select</option>
-                    {categories.find(c => c.name === formData.category)?.children.map(sc => (
+                    {categories.find(c => c.name === formData.category)?.children?.map(sc => (
                       <option key={sc.id} value={sc.name}>{sc.name}</option>
                     ))}
                   </select>
