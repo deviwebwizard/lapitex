@@ -286,10 +286,10 @@ export default function ProductsClient({ initialProducts, categories = [] }: { i
                     value={formData.subcategory || ""} 
                     onChange={e => setFormData({...formData, subcategory: e.target.value})} 
                     className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] cursor-pointer disabled:opacity-50"
-                    disabled={!formData.category || (categories.find(c => c.name === formData.category)?.children?.length || 0) === 0}
+                    disabled={!formData.category || (categories.find(c => c.name.trim().toLowerCase() === (formData.category || "").trim().toLowerCase())?.children?.length || 0) === 0}
                   >
                     <option value="">None / Select</option>
-                    {categories.find(c => c.name === formData.category)?.children?.map(sc => (
+                    {categories.find(c => c.name.trim().toLowerCase() === (formData.category || "").trim().toLowerCase())?.children?.map(sc => (
                       <option key={sc.id} value={sc.name}>{sc.name}</option>
                     ))}
                   </select>
