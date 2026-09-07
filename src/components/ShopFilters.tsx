@@ -7,6 +7,7 @@ import { ChevronDown, Filter } from "lucide-react";
 type CategoryNode = { id: string; name: string; slug: string; children?: CategoryNode[] };
 
 export function ShopFilters({ categories = [] }: { categories?: CategoryNode[] }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   
   const currentCategory = searchParams.get('category') || '';
