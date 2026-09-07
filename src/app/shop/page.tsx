@@ -30,16 +30,22 @@ export default async function ShopPage({
   if (categoryFilter) whereClause.category = categoryFilter;
   if (conditionFilter) whereClause.condition = conditionFilter;
   if (subcategoryFilter) {
-    // Brand/product filters are represented by the product name in the current
-    // product model, so no schema change is needed for the storefront filter.
     const subcategoryNames = subcategoryFilter === 'H.P'
       ? [{ contains: 'HP' }, { contains: 'H.P' }]
       : [{ contains: subcategoryFilter }];
-    whereClause.AND = (whereClause.AND || []).concat(
-      subcategoryNames.length > 1
-        ? [{ OR: subcategoryNames.map((name) => ({ name })) }]
-        : [{ name: subcategoryNames[0] }]
-    );
+      
+    const nameMatchConditions = subcategoryNames.length > 1
+      ? { OR: subcategoryNames.map((name) => ({ name })) }
+      : { name: subcategoryNames[0] };
+
+    const subcategoryConditions = {
+      OR: [
+        { subcategory: subcategoryFilter },
+        nameMatchConditions
+      ]
+    };
+
+    whereClause.AND = (whereClause.AND || []).concat([subcategoryConditions]);
   }
   if (searchQuery) {
     whereClause.name = { contains: searchQuery }; // SQLite case-sensitivity might apply, but basic contains works

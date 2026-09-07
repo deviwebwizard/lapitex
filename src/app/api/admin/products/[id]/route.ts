@@ -20,6 +20,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         price: parseFloat(body.price),
         originalPrice: body.originalPrice ? parseFloat(body.originalPrice) : null,
         category: body.category,
+        subcategory: body.subcategory || null,
         condition: body.condition,
         stock: parseInt(body.stock),
         imageUrl: body.imageUrl,

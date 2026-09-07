@@ -12,6 +12,7 @@ type Product = {
   originalPrice: number | null;
   stock: number;
   category: string;
+  subcategory: string | null;
   condition: string;
   imageUrl: string | null;
   imageUrls: string | null;
@@ -19,6 +20,13 @@ type Product = {
   isFeatured: boolean;
   description: string;
   _count: { orderItems: number; views: number; cartItems: number };
+};
+
+type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  children: { id: string; name: string; slug: string }[];
 };
 
 function SafeImagePreview({ src, alt, className = "w-full h-full object-cover" }: { src: string | null; alt: string; className?: string }) {
@@ -62,7 +70,7 @@ function getEffectiveBadge(product: Pick<Product, "discountBadge" | "price" | "o
   return "";
 }
 
-export default function ProductsClient({ initialProducts }: { initialProducts: Product[] }) {
+export default function ProductsClient({ initialProducts, categories = [] }: { initialProducts: Product[], categories?: Category[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,7 +82,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
 
   const [formData, setFormData] = useState({
     name: "", description: "", price: "", originalPrice: "", stock: "0",
-    category: "", condition: "Refurbished", imageUrls: ["", "", "", "", ""], discountBadge: "", isFeatured: false,
+    category: "", subcategory: "", condition: "Refurbished", imageUrls: ["", "", "", "", ""], discountBadge: "", isFeatured: false,
   });
 
   const filteredProducts = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
@@ -86,12 +94,12 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
       setFormData({
         name: product.name, description: product.description,
         price: product.price.toString(), originalPrice: product.originalPrice ? product.originalPrice.toString() : "",
-        stock: product.stock.toString(), category: product.category,
+        stock: product.stock.toString(), category: product.category, subcategory: product.subcategory || "",
         condition: product.condition, imageUrls: [...parseImageUrls(product.imageUrls, product.imageUrl), "", "", "", "", ""].slice(0, 5), discountBadge: getEffectiveBadge(product), isFeatured: product.isFeatured,
       });
     } else {
       setEditingProduct(null);
-      setFormData({ name: "", description: "", price: "", originalPrice: "", stock: "0", category: "", condition: "Refurbished", imageUrls: ["", "", "", "", ""], discountBadge: "", isFeatured: false });
+      setFormData({ name: "", description: "", price: "", originalPrice: "", stock: "0", category: "", subcategory: "", condition: "Refurbished", imageUrls: ["", "", "", "", ""], discountBadge: "", isFeatured: false });
     }
     setIsModalOpen(true);
   };
@@ -258,14 +266,33 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
             </div>
             
             <form onSubmit={handleSubmit} className="p-7 max-h-[65vh] overflow-y-auto space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Product Name</label>
                   <input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Category</label>
-                  <input required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26]" />
+                  <select required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value, subcategory: ""})} className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] appearance-none cursor-pointer">
+                    <option value="" disabled>Select a category</option>
+                    {categories.map(c => (
+                      <option key={c.id} value={c.name}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">Subcategory</label>
+                  <select 
+                    value={formData.subcategory} 
+                    onChange={e => setFormData({...formData, subcategory: e.target.value})} 
+                    className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] appearance-none cursor-pointer disabled:opacity-50"
+                    disabled={!formData.category || (categories.find(c => c.name === formData.category)?.children.length || 0) === 0}
+                  >
+                    <option value="">None / Select</option>
+                    {categories.find(c => c.name === formData.category)?.children.map(sc => (
+                      <option key={sc.id} value={sc.name}>{sc.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

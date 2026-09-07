@@ -32,6 +32,7 @@ model Product {
   originalPrice                  Float?
   stock                          Int           @default(0)
   category                       String
+  subcategory                    String?
   condition                      String        @default("Refurbished") // Refurbished, Used, New
   imageUrl                       String?
   imageUrls                      String? // JSON array of up to five gallery image URLs

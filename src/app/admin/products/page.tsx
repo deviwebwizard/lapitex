@@ -13,5 +13,13 @@ export default async function AdminProductsPage() {
     }
   });
 
-  return <ProductsClient initialProducts={products} />;
+  const categories = await prisma.category.findMany({
+    where: { parentId: null },
+    include: {
+      children: true,
+    },
+    orderBy: { name: 'asc' }
+  });
+
+  return <ProductsClient initialProducts={products} categories={categories} />;
 }
