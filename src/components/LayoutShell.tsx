@@ -12,10 +12,12 @@ import { ContactInfo, safeUrl, whatsappUrl } from "@/lib/siteContent";
 export function LayoutShell({
   saleBanner,
   contactInfo,
+  categories,
   children,
 }: {
   saleBanner: { isActive: boolean; isStickyActive?: boolean; text?: string; mainText?: string; stickyText?: string } | null;
   contactInfo: ContactInfo;
+  categories?: any[];
   children: ReactNode;
 }) {
   const whatsapp = whatsappUrl(contactInfo.whatsappRedirect);
@@ -29,7 +31,7 @@ export function LayoutShell({
 
   return (
     <>
-      <Navbar saleBanner={saleBanner} />
+      <Navbar saleBanner={saleBanner} categories={categories} />
       <UserActivityTracker />
       <main className={`flex-grow ${hasStickyBanner ? "pt-[6.75rem] md:pt-[9rem]" : "pt-20 md:pt-24"}`}>
         {children}

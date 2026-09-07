@@ -63,6 +63,14 @@ export default async function ShopPage({
     orderBy: orderByClause
   });
 
+  const categories = await prisma.category.findMany({
+    where: { parentId: null },
+    include: {
+      children: true,
+    },
+    orderBy: { createdAt: 'asc' }
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 min-h-screen">
       <div className="flex flex-col md:flex-row gap-8">
@@ -70,7 +78,7 @@ export default async function ShopPage({
         {/* Sidebar Filters */}
         <div className="w-full md:w-64 flex-shrink-0">
           <Suspense fallback={<div>Loading filters...</div>}>
-            <ShopFilters />
+            <ShopFilters categories={categories} />
           </Suspense>
         </div>
 

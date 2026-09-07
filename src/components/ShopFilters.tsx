@@ -4,14 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { ChevronDown, Filter } from "lucide-react";
 
-const subcategories = {
-  Laptops: ['H.P', 'Dell', 'Asus', 'Macbook', 'Lenovo', 'Samsung', 'Toshiba'],
-  Desktops: ['H.P', 'Dell', 'Intel', 'Zebronics', 'Gigabyte', 'Ivoomi', 'frontech', 'zebion'],
-  Parts: ['Keyboard', 'Mouse', 'Screen', 'SSD', 'RAM', 'SMPS', 'ATX', 'Graphics card'],
-} as const;
+type CategoryNode = { id: string; name: string; slug: string; children?: CategoryNode[] };
 
-export function ShopFilters() {
-  const router = useRouter();
+export function ShopFilters({ categories = [] }: { categories?: CategoryNode[] }) {
   const searchParams = useSearchParams();
   
   const currentCategory = searchParams.get('category') || '';
@@ -65,7 +60,7 @@ export function ShopFilters() {
   };
 
   const applyPriceFilter = () => {
-    let params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams.toString());
     if (minPrice) params.set('min', minPrice);
     else params.delete('min');
     
@@ -125,36 +120,36 @@ export function ShopFilters() {
             >
               All Products
             </button>
-            {(['Laptops', 'Desktops', 'Parts'] as const).map((category) => {
-              const isExpanded = expandedCategory === category;
-              const label = category === 'Parts' ? 'Parts & Upgrades' : category;
+            {categories.map((category) => {
+              const isExpanded = expandedCategory === category.slug;
+              const label = category.name;
               return (
-                <div key={category}>
+                <div key={category.id}>
                   <div className="flex items-center gap-1">
                     <button
-                      onClick={() => handleCategoryChange(category)}
-                      className={`block text-sm text-left flex-1 ${currentCategory === category && !currentSubcategory ? 'text-primary font-bold' : 'text-gray-600 hover:text-primary font-medium'}`}
+                      onClick={() => handleCategoryChange(category.slug)}
+                      className={`block text-sm text-left flex-1 ${currentCategory === category.slug && !currentSubcategory ? 'text-primary font-bold' : 'text-gray-600 hover:text-primary font-medium'}`}
                     >
                       {label}
                     </button>
                     <button
                       type="button"
                       aria-label={`${isExpanded ? 'Hide' : 'Show'} ${label} subcategories`}
-                      onClick={() => setExpandedCategory(isExpanded ? null : category)}
+                      onClick={() => setExpandedCategory(isExpanded ? null : category.slug)}
                       className="p-1 text-gray-400 hover:text-primary"
                     >
                       <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                     </button>
                   </div>
-                  {isExpanded && (
+                  {isExpanded && category.children && category.children.length > 0 && (
                     <div className="ml-3 mt-2 space-y-2 border-l border-gray-100 pl-3">
-                      {subcategories[category].map((subcategory) => (
+                      {category.children.map((subcategory: CategoryNode) => (
                         <button
-                          key={subcategory}
-                          onClick={() => handleSubcategoryChange(subcategory)}
-                          className={`block w-full text-left text-xs ${currentSubcategory === subcategory ? 'font-bold text-primary' : 'font-medium text-gray-500 hover:text-primary'}`}
+                          key={subcategory.id}
+                          onClick={() => handleSubcategoryChange(subcategory.name)}
+                          className={`block w-full text-left text-xs ${currentSubcategory === subcategory.name ? 'font-bold text-primary' : 'font-medium text-gray-500 hover:text-primary'}`}
                         >
-                          {subcategory}
+                          {subcategory.name}
                         </button>
                       ))}
                     </div>

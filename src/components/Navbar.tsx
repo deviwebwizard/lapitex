@@ -8,13 +8,9 @@ import { useCompareStore } from "@/store/compareStore";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
-const headerCategories = [
-  { id: "laptops", name: "Laptops", slug: "Laptops", children: ["H.P", "Dell", "Asus", "Macbook", "Lenovo", "Samsung", "Toshiba"] },
-  { id: "desktops", name: "Desktops", slug: "Desktops", children: ["H.P", "Dell", "Intel", "Zebronics", "Gigabyte", "Ivoomi", "frontech", "zebion"] },
-  { id: "parts", name: "Parts & Upgrades", slug: "Parts", children: ["Keyboard", "Mouse", "Screen", "SSD", "RAM", "SMPS", "ATX", "Graphics card"] },
-] as const;
+type CategoryNode = { id: string; name: string; slug: string; children?: CategoryNode[] };
 
-export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isStickyActive?: boolean; text?: string; mainText?: string; stickyText?: string } | null }) {
+export function Navbar({ saleBanner, categories = [] }: { saleBanner?: { isActive: boolean; isStickyActive?: boolean; text?: string; mainText?: string; stickyText?: string } | null; categories?: CategoryNode[] }) {
   const { data: session, status } = useSession();
   const totalItems = useCartStore((state) => state.totalItems());
   const compareItems = useCompareStore((state) => state.items.length);
@@ -111,22 +107,24 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
 
                   {/* Mega Menu Dropdown */}
                   <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-3 transition-all duration-300 ${megaMenuOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-                    <div className="w-[600px] glass-card-strong rounded-3xl p-7 flex gap-7 justify-between">
-                      {headerCategories.map(category => (
-                        <div key={category.id} className="flex-1">
+                    <div className="w-[800px] max-w-[90vw] glass-card-strong rounded-3xl p-7 flex flex-wrap gap-7">
+                      {categories.map(category => (
+                        <div key={category.id} className="flex-1 min-w-[150px]">
                           <Link href={category.slug ? `/shop?category=${encodeURIComponent(category.slug)}` : "/shop"} className="text-[10px] font-black text-[#e1467c] uppercase tracking-[0.2em] mb-4 flex items-center gap-1.5 hover:text-[#c23066]">
                             <span className="w-5 h-[2px] rounded-full bg-gradient-to-r from-[#e1467c] to-[#f472a8]" />
                             {category.name}
                           </Link>
-                          <ul className="space-y-1">
-                            {category.children.map(sub => (
-                              <li key={sub}>
-                                <Link href={`/shop?category=${encodeURIComponent(category.slug)}&subcategory=${encodeURIComponent(sub)}`} className="block text-sm text-[#4a1a2e] hover:text-[#e1467c] font-medium py-2.5 px-3 rounded-xl hover:bg-pink-50/80 transition-all duration-200">
-                                  {sub}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+                          {category.children && category.children.length > 0 && (
+                            <ul className="space-y-1">
+                              {category.children.map((sub: CategoryNode) => (
+                                <li key={sub.id}>
+                                  <Link href={`/shop?category=${encodeURIComponent(category.slug)}&subcategory=${encodeURIComponent(sub.name)}`} className="block text-sm text-[#4a1a2e] hover:text-[#e1467c] font-medium py-2.5 px-3 rounded-xl hover:bg-pink-50/80 transition-all duration-200">
+                                    {sub.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -228,28 +226,20 @@ export function Navbar({ saleBanner }: { saleBanner?: { isActive: boolean; isSti
           {/* Drawer Body */}
           <div className="flex-1 overflow-y-auto py-5 px-5 space-y-6">
             
-            {/* Devices */}
+            {/* Categories */}
             <div className="px-1">
               <h4 className="text-[9px] font-black text-[#e1467c] uppercase tracking-[0.25em] mb-3 flex items-center gap-2">
                 <span className="w-4 h-[2px] rounded-full bg-gradient-to-r from-[#e1467c] to-[#f472a8]" />
-                Devices
+                Categories
               </h4>
               <ul className="space-y-0.5">
-                <li><Link href="/shop?category=Laptops" onClick={() => setMobileMenuOpen(false)} className="flex items-center text-[#2d1a26] font-semibold py-3 px-4 rounded-2xl hover:bg-pink-50/80 transition-all"><Laptop className="w-4 h-4 mr-3 text-[#e1467c]/60" /> Laptops</Link></li>
-                <li><Link href="/shop?category=Desktops" onClick={() => setMobileMenuOpen(false)} className="flex items-center text-[#2d1a26] font-semibold py-3 px-4 rounded-2xl hover:bg-pink-50/80 transition-all"><Monitor className="w-4 h-4 mr-3 text-[#e1467c]/60" /> Desktops</Link></li>
-              </ul>
-            </div>
-
-            {/* Components */}
-            <div className="px-1">
-              <h4 className="text-[9px] font-black text-[#e1467c] uppercase tracking-[0.25em] mb-3 flex items-center gap-2">
-                <span className="w-4 h-[2px] rounded-full bg-gradient-to-r from-[#e1467c] to-[#f472a8]" />
-                Components
-              </h4>
-              <ul className="space-y-0.5">
-                <li><Link href="/shop?category=Parts&q=ram" onClick={() => setMobileMenuOpen(false)} className="flex items-center text-[#2d1a26] font-semibold py-3 px-4 rounded-2xl hover:bg-pink-50/80 transition-all"><Cpu className="w-4 h-4 mr-3 text-[#e1467c]/60" /> Memory (RAM)</Link></li>
-                <li><Link href="/shop?category=Parts&q=ssd" onClick={() => setMobileMenuOpen(false)} className="flex items-center text-[#2d1a26] font-semibold py-3 px-4 rounded-2xl hover:bg-pink-50/80 transition-all"><HardDrive className="w-4 h-4 mr-3 text-[#e1467c]/60" /> Storage (SSD)</Link></li>
-                <li><Link href="/shop?category=Parts" onClick={() => setMobileMenuOpen(false)} className="flex items-center text-[#2d1a26] font-semibold py-3 px-4 rounded-2xl hover:bg-pink-50/80 transition-all">All Parts →</Link></li>
+                {categories.map(cat => (
+                  <li key={cat.id}>
+                    <Link href={`/shop?category=${encodeURIComponent(cat.slug)}`} onClick={() => setMobileMenuOpen(false)} className="flex items-center text-[#2d1a26] font-semibold py-3 px-4 rounded-2xl hover:bg-pink-50/80 transition-all">
+                      <Monitor className="w-4 h-4 mr-3 text-[#e1467c]/60" /> {cat.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 

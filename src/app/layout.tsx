@@ -37,6 +37,14 @@ export default async function RootLayout({
   }
   const contactInfo = mergeContact(contactSetting ? JSON.parse(contactSetting.value) : undefined);
 
+  const categories = await prisma.category.findMany({
+    where: { parentId: null },
+    include: {
+      children: true,
+    },
+    orderBy: { createdAt: 'asc' }
+  });
+
   return (
     <html
       lang="en"
@@ -44,7 +52,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
         <Providers>
-          <LayoutShell saleBanner={saleBanner} contactInfo={contactInfo}>
+          <LayoutShell saleBanner={saleBanner} contactInfo={contactInfo} categories={categories}>
             {children}
           </LayoutShell>
           <CookieBanner />
