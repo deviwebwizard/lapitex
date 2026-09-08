@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [product, shipping] = await Promise.all([
+  const [product, shipping, categories] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
       include: {
@@ -17,8 +17,9 @@ export default async function AdminProductDetailPage({ params }: { params: Promi
       },
     }),
     prisma.siteSetting.findUnique({ where: { key: "SHIPPING_FEE" } }),
+    prisma.category.findMany({ where: { parentId: null }, include: { children: true }, orderBy: { name: "asc" } }),
   ]);
   if (!product) notFound();
   const siteShippingFee = shipping ? Number(shipping.value) || 0 : 0;
-  return <ProductAdminDetailClient product={product} siteShippingFee={siteShippingFee} />;
+  return <ProductAdminDetailClient product={product} siteShippingFee={siteShippingFee} categories={categories} />;
 }

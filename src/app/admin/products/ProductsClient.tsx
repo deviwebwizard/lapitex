@@ -30,6 +30,18 @@ type Category = {
   children: { id: string; name: string; slug: string }[];
 };
 
+const defaultSubcategories: Record<string, string[]> = {
+  laptops: ["H.P", "Dell", "Asus", "Macbook", "Lenovo", "Samsung", "Toshiba"],
+  desktops: ["H.P", "Dell", "Intel", "Zebronics", "Gigabyte", "Ivoomi", "frontech", "zebion"],
+  parts: ["Keyboard", "Mouse", "Screen", "SSD", "RAM", "SMPS", "ATX", "Graphics card"],
+  "parts & upgrades": ["Keyboard", "Mouse", "Screen", "SSD", "RAM", "SMPS", "ATX", "Graphics card"],
+};
+
+function getSubcategories(categories: Category[], category: string) {
+  const match = categories.find((item) => item.name.trim().toLowerCase() === category.trim().toLowerCase());
+  return match?.children?.length ? match.children.map((child) => child.name) : (defaultSubcategories[category.trim().toLowerCase()] || []);
+}
+
 function SafeImagePreview({ src, alt, className = "w-full h-full object-cover" }: { src: string | null; alt: string; className?: string }) {
   const [error, setError] = useState(false);
 
@@ -284,7 +296,7 @@ export default function ProductsClient({ initialProducts, categories = [] }: { i
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-[#e1467c] uppercase tracking-widest">
-                    Subcategory ({categories.find(c => c.name.trim().toLowerCase() === (formData.category || "").trim().toLowerCase())?.children?.length || 0} options)
+                    Subcategory ({getSubcategories(categories, formData.category).length} options)
                   </label>
                   <select 
                     value={formData.subcategory || ""} 
@@ -292,8 +304,8 @@ export default function ProductsClient({ initialProducts, categories = [] }: { i
                     className="w-full px-4 py-3 bg-pink-50/40 border border-pink-100/40 rounded-2xl text-sm font-medium text-[#2d1a26] cursor-pointer"
                   >
                     <option value="">None / Select</option>
-                    {categories.find(c => c.name.trim().toLowerCase() === (formData.category || "").trim().toLowerCase())?.children?.map(sc => (
-                      <option key={sc.id} value={sc.name}>{sc.name}</option>
+                    {getSubcategories(categories, formData.category).map((subcategory) => (
+                      <option key={subcategory} value={subcategory}>{subcategory}</option>
                     ))}
                   </select>
                 </div>
