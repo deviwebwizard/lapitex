@@ -9,6 +9,7 @@ import { parseSpecs } from "@/lib/parseSpecs";
 import ProductTracker from "@/components/ProductTracker";
 import { ProductGallery } from "@/components/ProductGallery";
 import { getProductImages } from "@/lib/productImages";
+import { SoldOutBanner } from "@/components/SoldOutBanner";
 
 export default async function ProductPage({
   params,
@@ -76,9 +77,12 @@ export default async function ProductPage({
             {/* Left: Manual product image gallery */}
             <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col border-b md:border-b-0 md:border-r border-gray-100 relative">
               {product.imageUrl ? (
-                <ProductGallery images={getProductImages(product.imageUrl, product.id, 5, product.imageUrls, product.category)} alt={product.name} />
+                <ProductGallery isSoldOut={product.stock <= 0} images={getProductImages(product.imageUrl, product.id, 5, product.imageUrls, product.category)} alt={product.name} />
               ) : (
-                <div className="flex-grow flex items-center justify-center bg-gray-50 rounded-[2rem] min-h-[300px] md:min-h-[450px] text-gray-400 text-lg font-medium">No Image Available</div>
+                <div className="flex-grow flex items-center justify-center bg-gray-50 rounded-[2rem] min-h-[300px] md:min-h-[450px] text-gray-400 text-lg font-medium relative">
+                  {product.stock <= 0 && <SoldOutBanner className="py-2.5 text-sm md:text-base" />}
+                  No Image Available
+                </div>
               )}
               {product.imageUrl && (
                 <div className="absolute top-4 right-4">

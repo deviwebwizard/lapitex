@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, Search, Image as ImageIcon, X, Upload, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getProductImages } from "@/lib/productImages";
+import { SoldOutBanner } from "@/components/SoldOutBanner";
 
 type Product = {
   id: string;
@@ -190,8 +191,9 @@ export default function ProductsClient({ initialProducts, categories = [] }: { i
           <div key={product.id} onClick={() => router.push(`/admin/products/${product.id}`)} className="clay-card p-5 group cursor-pointer hover:-translate-y-1 transition-transform">
             <div className="flex items-start gap-4">
               {/* Image */}
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-50 to-white border border-pink-100/40 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-sm">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-50 to-white border border-pink-100/40 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-sm relative">
                 <SafeImagePreview src={getProductImages(product.imageUrl, product.id, 1, product.imageUrls, product.category)[0] || null} alt={product.name} />
+                {product.stock <= 0 && <SoldOutBanner className="py-0.5 text-[8px]" />}
               </div>
               
               {/* Info */}

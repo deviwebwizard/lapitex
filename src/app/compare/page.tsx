@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingCart, Trash2, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { parseSpecs } from "@/lib/parseSpecs";
+import { SoldOutBanner } from "@/components/SoldOutBanner";
 
 type Specification = { key: string; value: string };
 
@@ -108,12 +109,13 @@ export default function ComparePage() {
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                    <div className="h-32 flex items-center justify-center mb-4 bg-[#fbfbfd] rounded-2xl">
+                    <div className="h-32 flex items-center justify-center mb-4 bg-[#fbfbfd] rounded-2xl relative overflow-hidden">
                       {product.imageUrl ? (
                         <img src={product.imageUrl} alt={product.name} className="max-h-full object-contain mix-blend-multiply p-4" />
                       ) : (
                         <div className="text-gray-400 text-sm">No Image</div>
                       )}
+                      {product.stock <= 0 && <SoldOutBanner className="py-1 text-[10px]" />}
                     </div>
                     <Link href={`/product/${product.id}`} className="hover:text-primary transition-colors block">
                       <h3 className="font-bold text-gray-900 line-clamp-2">{product.name}</h3>

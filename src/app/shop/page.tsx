@@ -8,6 +8,7 @@ import { ShopSort } from "@/components/ShopSort";
 import { CompareButton } from "@/components/CompareButton";
 import { FeaturedProductImage } from "@/components/FeaturedProductImage";
 import { getProductImages } from "@/lib/productImages";
+import { SoldOutBanner } from "@/components/SoldOutBanner";
 import type { Product } from "@/types/product";
 
 export default async function ShopPage({
@@ -124,6 +125,9 @@ export default async function ShopPage({
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400 font-medium">No Image</div>
                       )}
+
+                      {/* Sold Out Red Banner */}
+                      {product.stock <= 0 && <SoldOutBanner />}
                       
                       {/* Discount Badge */}
                       {(product.discountBadge || hasDiscount) && (
